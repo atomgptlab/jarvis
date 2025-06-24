@@ -12,7 +12,7 @@ with open(os.path.join(base_dir, "README.md")) as f:
 
 setup(
     name="jarvis-tools",
-    version="2024.10.30",
+    version="2025.5.30",
     long_description=long_d,
     install_requires=[
         "numpy>=1.20.1",
@@ -73,8 +73,8 @@ setup(
     description=(
         "jarvis-tools: an open-source software package for data-driven atomistic materials design. https://jarvis.nist.gov/"
     ),
-    license="NIST",
-    url="https://github.com/usnistgov/jarvis",
+    license="MIT",
+    url="https://github.com/atomgptlab/jarvis-tools",
     packages=find_packages(),
     # long_description=open(os.path.join(os.path.dirname(__file__), "README.rst")).read(),
     classifiers=[

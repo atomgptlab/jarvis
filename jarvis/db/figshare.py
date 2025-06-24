@@ -325,7 +325,7 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.23000573
         "vacancydb": [
-            "https://figshare.com/ndownloader/files/40750811",
+            "https://figshare.com/ndownloader/files/52845425",
             "vacancydb.json",
             "Obtaining vacancy dataset 464...",
             "https://doi.org/10.1063/5.0135382",
@@ -498,6 +498,13 @@ def get_db_info():
             "alexandria_ps_3d_2024.10.1_jarvis_tools.json",
             "Obtaining Alexandria_DB PBEsol 3D all 500k...",
             "https://alexandria.icams.rub.de/",
+        ],
+        # https://doi.org/10.6084/m9.figshare.27174897
+        "alex_supercon": [
+            "https://figshare.com/ndownloader/files/55551155",
+            "alex_supercon.json",
+            "Obtaining Alexandria_SuperConDB 8253...",
+            "https://doi.org/10.1002/adfm.202404043",
         ],
         # https://doi.org/10.6084/m9.figshare.13154159
         "raw_files": [

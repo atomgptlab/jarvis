@@ -12,7 +12,7 @@ import json
 
 def jarvisdft_optimade(
     prefix="https://jarvis.nist.gov/optimade/jarvisdft/v1/structures/?filter=",
-    query="elements HAS  ALL C,Si",
+    query="elements HAS ALL C,Si",
 ):
     url = prefix + query
     vals = []

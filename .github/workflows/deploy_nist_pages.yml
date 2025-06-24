@@ -79,5 +79,5 @@ jobs:
             # git commit -m 'Adding files.'
             # git push origin nist-pages -f
             git commit -a -m "Move"
-            git push -f origin nist-pages1
+            #git push -f origin nist-pages1
             mkdocs gh-deploy  

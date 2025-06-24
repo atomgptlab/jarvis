@@ -6,3 +6,5 @@ def test_optimade():
     print(x)
     print(len(x))
     assert len(x) > 1
+
+# #test_optimade()

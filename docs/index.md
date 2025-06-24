@@ -30,7 +30,7 @@ project is a part of the Materials Genome Initiative (MGI) at NIST
 
 For more details, checkout our latest articles: [The joint automated
 repository for various integrated simulations (JARVIS) for data-driven
-materials design](https://www.nature.com/articles/s41524-020-00440-1), [Recent progress in the JARVIS infrastructure for next-generation data-driven materials design](https://pubs.aip.org/aip/apr/article/10/4/041302/2917416), [other publications](https://pages.nist.gov/jarvis/publications/) and [YouTube
+materials design](https://www.nature.com/articles/s41524-020-00440-1), [Recent progress in the JARVIS infrastructure for next-generation data-driven materials design](https://pubs.aip.org/aip/apr/article/10/4/041302/2917416), [other publications](https://scholar.google.com/citations?user=3w6ej94AAAAJ) and [YouTube
 videos](https://www.youtube.com/watch?v=P0ZcHXOC6W0&feature=emb_title&ab_channel=JARVIS-repository)
 
 
@@ -39,21 +39,25 @@ videos](https://www.youtube.com/watch?v=P0ZcHXOC6W0&feature=emb_title&ab_channel
 </p>
 
 
+
+
 [![image](https://badge.fury.io/py/jarvis-tools.svg)](https://pypi.org/project/jarvis-tools/)
 [![image](https://anaconda.org/conda-forge/jarvis-tools/badges/version.svg)](https://anaconda.org/conda-forge/jarvis-tools)
-[![image](https://img.shields.io/github/v/tag/usnistgov/jarvis)](https://github.com/usnistgov/jarvis)
+[![image](https://img.shields.io/github/v/tag/atomgptlab/jarvis-tools)](https://github.com/atomgptlab/jarvis-tools)
 [![image](https://ci.appveyor.com/api/projects/status/d8na8vyfm7ulya9p/branch/master?svg=true)](https://ci.appveyor.com/project/knc6/jarvis-63tl9)
-[![image](https://github.com/usnistgov/jarvis/workflows/JARVIS-Tools%20github%20action/badge.svg)](https://github.com/usnistgov/jarvis)
-[![image](https://github.com/usnistgov/jarvis/workflows/JARVIS-Tools%20linting/badge.svg)](https://github.com/usnistgov/jarvis)
+[![image](https://github.com/atomgptlab/jarvis-tools/workflows/JARVIS-Tools%20github%20action/badge.svg)](https://github.com/atomgptlab/jarvis-tools)
+[![image](https://github.com/atomgptlab/jarvis/workflows/JARVIS-Tools%20linting/badge.svg)](https://github.com/atomgptlab/jarvis-tools)
 [![image](https://img.shields.io/codecov/c/github/knc6/jarvis)](https://codecov.io/gh/knc6/jarvis)
 [![image](https://img.shields.io/pypi/dm/jarvis-tools.svg)](https://img.shields.io/pypi/dm/jarvis-tools.svg)
 [![image](https://pepy.tech/badge/jarvis-tools)](https://pepy.tech/badge/jarvis-tools)
 [![image](https://zenodo.org/badge/DOI/10.5281/zenodo.3903515.svg)](https://doi.org/10.5281/zenodo.3903515)
-[![image](https://img.shields.io/github/commit-activity/y/usnistgov/jarvis)](https://github.com/usnistgov/jarvis)
-[![image](https://img.shields.io/github/repo-size/usnistgov/jarvis)](https://github.com/usnistgov/jarvis)
+[![image](https://img.shields.io/github/commit-activity/y/atomgptlab/jarvis-tools)](https://github.com/atomgptlab/jarvis-tools)
+[![image](https://img.shields.io/github/repo-size/atomgptlab/jarvis-tools)](https://github.com/atomgptlab/jarvis-tools)
 [![image](https://img.shields.io/badge/JARVIS-Figshare-Green.svg)](https://figshare.com/authors/Kamal_Choudhary/4445539)
-[![image](https://img.shields.io/badge/JARVIS-ToolsDocs-Green.svg)](https://pages.nist.gov/jarvis)
-[![image](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/JARVIS-Materials-Design/jarvis-tools-notebooks)
+[![image](https://img.shields.io/badge/JARVIS-ToolsDocs-Green.svg)](https://atomgptlab.github.io/jarvis-tools/)
+[![image](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/atomgptlab/jarvis-tools-notebooks)
+
+
 <!-- [![image](https://img.shields.io/travis/usnistgov/jarvis/master.svg?label=Travis%20CI)](https://travis-ci.org/usnistgov/jarvis) -->
 ------------------------------------------------------------------------
 
@@ -62,7 +66,7 @@ videos](https://www.youtube.com/watch?v=P0ZcHXOC6W0&feature=emb_title&ab_channel
 <a name="doc"></a>
 ## Documentation
 
-> <https://pages.nist.gov/jarvis>
+> <https://atomgptlab.github.io/jarvis-tools/>
 
 <a name="cap"></a>
 ## Capabilities
@@ -88,7 +92,7 @@ videos](https://www.youtube.com/watch?v=P0ZcHXOC6W0&feature=emb_title&ab_channel
     and datasets for training machine learning models.
 -   **HPC clusters**: Torque/PBS and SLURM.
 -   **Available datasets**: [Summary of several
-    datasets](https://pages.nist.gov/jarvis/databases/)
+    datasets](https://atomgptlab.github.io/jarvis-tools/databases/)
     .
 <a name="install"></a>
 ## Installation
@@ -198,9 +202,9 @@ for ii,i in enumerate(dft_3d):
 
 Find more examples at
 
-> 1.  <https://pages.nist.gov/jarvis/tutorials/>
+> 1.  <https://atomgptlab.github.io/jarvis-tools/tutorials/>
 > 2.  <https://github.com/JARVIS-Materials-Design/jarvis-tools-notebooks>
-> 3.  <https://github.com/usnistgov/jarvis/tree/master/jarvis/tests/testfiles>
+> 3.  <https://atomgptlab.github.io/jarvis-tools/jarvis/tests/testfiles>
 
 <a name="cite"></a>
 ## Citing
@@ -218,7 +222,7 @@ publication.
 ## References
 
 Please see [Publications related to
-JARVIS-Tools](https://pages.nist.gov/jarvis/publications/)
+JARVIS-Tools](https://scholar.google.com/citations?user=3w6ej94AAAAJ)
 
 <a name="contrib"></a>
 ## How to contribute
@@ -239,6 +243,8 @@ Please report bugs as Github issues
 ## Funding support
 
 NIST-MGI (<https://www.nist.gov/mgi>).
+
+Note: this repo has been migrated from https://github.com/usnistgov/jarvis
 
 <a name="conduct"></a>
 ## Code of conduct

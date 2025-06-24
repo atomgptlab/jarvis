@@ -73,8 +73,8 @@ setup(
     description=(
         "jarvis-tools: an open-source software package for data-driven atomistic materials design. https://jarvis.nist.gov/"
     ),
-    license="NIST",
-    url="https://github.com/usnistgov/jarvis",
+    license="MIT",
+    url="https://github.com/atomgptlab/jarvis-tools",
     packages=find_packages(),
     # long_description=open(os.path.join(os.path.dirname(__file__), "README.rst")).read(),
     classifiers=[

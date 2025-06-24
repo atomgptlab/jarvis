@@ -28,7 +28,7 @@
 # |                                                                                                        |
 # +--------------------------------------------------------------------------------------------------------+
 site_name: JARVIS-Tools
-site_url: https://github.com/usnistgov/jarvis
+site_url: https://github.com/atomgptlab/jarvis-tools
 site_description: 'jarvis-tools: an open-source software package for data-driven atomistic materials design. https://jarvis.nist.gov/.'
 site_author: 'Kamal Choudhary'
 #use_directory_urls: false
@@ -76,8 +76,8 @@ docs_dir: docs/
 # | - https://www.mkdocs.org/user-guide/configuration/#edit_uri                                            |
 # |                                                                                                        |
 # +--------------------------------------------------------------------------------------------------------+
-repo_name: jarvis
-repo_url: https://github.com/usnistgov/jarvis
+repo_name: jarvis-tools
+repo_url: https://github.com/atomgptlab/jarvis-tools
 #edit_uri: tree/master/docs # Uncomment to define a different URI/URL for the "edit" option
 
 # +--------------------------------------------------------------------------------------------------------+
@@ -124,7 +124,8 @@ theme:
   # |                                                                                                      |
   # +------------------------------------------------------------------------------------------------------+
   name: 'material'
-  custom_dir: overrides
+  # custom_dir: overrides
+  
   # +------------------------------------------------------------------------------------------------------+
   # |                                                                                                      |
   # | The Material theme allows "theme-extsnions", meaning that you can override parts of it by either     |
@@ -442,7 +443,7 @@ extra:
   # +------------------------------------------------------------------------------------------------------+
   social:
     - icon: 'fontawesome/brands/github'
-      link: 'https://github.com/usnistgov/jarvis'
+      link: 'https://github.com/atomgptlab/jarvis-tools'
   
   # +------------------------------------------------------------------------------------------------------+
   # |                                                                                                      |

@@ -208,6 +208,13 @@ def get_db_info():
             "Obtaining C2DB dataset 3.5k...",
             "https://iopscience.iop.org/article/10.1088/2053-1583/aacfc1",
         ],
+        # https://doi.org/10.6084/m9.figshare.29458907
+        "ramandb": [
+            "https://figshare.com/ndownloader/files/55928318",
+            "ramandb.json",
+            "Obtaining Raman dataset 5k...",
+            "https://www.nature.com/articles/s41597-023-01988-5",
+        ],
         # https://doi.org/10.6084/m9.figshare.25256236
         "halide_peroskites": [
             "https://figshare.com/ndownloader/files/44619562",

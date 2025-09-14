@@ -23,3 +23,6 @@ Detailed documentation available at: https://atomgptlab.github.io/jarvis-tools/
 [![image](https://img.shields.io/badge/JARVIS-Figshare-Green.svg)](https://figshare.com/authors/Kamal_Choudhary/4445539)
 [![image](https://img.shields.io/badge/JARVIS-ToolsDocs-Green.svg)](https://atomgptlab.github.io/jarvis-tools/)
 [![image](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/atomgptlab/jarvis-tools-notebooks)
+
+
+Note: This project was originally developed under the github.com/usnistgov organization and is now maintained here by the lead developer.

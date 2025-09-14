@@ -25,4 +25,4 @@ Detailed documentation available at: https://atomgptlab.github.io/jarvis-tools/
 [![image](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/atomgptlab/jarvis-tools-notebooks)
 
 
-Note: This project was originally developed under the github.com/usnistgov organization and is now maintained here by the lead developer.
+Note: This project was originally developed under the github.com/usnistgov organization. New updates and developments will be carried out here.

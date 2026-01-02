@@ -32,7 +32,8 @@ def get_db_info():
             "https://figshare.com/ndownloader/files/38521268",
             "d2-12-12-2022.json",
             "Obtaining 2D dataset 1.1k ...",
-            "https://www.nature.com/articles/s41524-020-00440-1"
+            "https://doi.org/10.1016/j.commatsci.2025.114063"
+            # "https://www.nature.com/articles/s41524-020-00440-1"
             + "\nOther versions:https://doi.org/10.6084/m9.figshare.6815705",
         ],
         # https://doi.org/10.6084/m9.figshare.6815699
@@ -40,7 +41,8 @@ def get_db_info():
             "https://figshare.com/ndownloader/files/38521619",
             "jdft_3d-12-12-2022.json",
             "Obtaining 3D dataset 76k ...",
-            "https://www.nature.com/articles/s41524-020-00440-1"
+            "https://doi.org/10.1016/j.commatsci.2025.114063"
+            # "https://www.nature.com/articles/s41524-020-00440-1"
             + "\nOther versions:https://doi.org/10.6084/m9.figshare.6815699",
         ],
         # https://doi.org/10.6084/m9.figshare.6815705

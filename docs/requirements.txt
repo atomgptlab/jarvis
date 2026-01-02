@@ -9,7 +9,6 @@ fonttools==4.61.1
 h5py==3.15.1
 idna==3.11
 iniconfig==2.3.0
--e git+https://github.com/atomgptlab/jarvis.git@b62d5b3e7e20b4e25c304017b1eaad9b32e2bc5a#egg=jarvis_tools
 Jinja2==3.1.6
 joblib==1.5.3
 kiwisolver==1.4.9
@@ -44,6 +43,15 @@ python-dateutil==2.9.0.post0
 pytz==2025.2
 PyYAML==6.0.3
 requests==2.32.5
+Sphinx>=4.3.2
+sphinx-rtd-theme>=1.0.0
+sphinxcontrib-applehelp>=1.0.2
+sphinx-autoapi>=1.8.4
+sphinxcontrib-devhelp>=1.0.2
+sphinxcontrib-htmlhelp>=2.0.0
+sphinxcontrib-jsmath>=1.0.1
+sphinxcontrib-qthelp>=1.0.3
+sphinxcontrib-serializinghtml>=1.1.5
 scikit-learn==1.8.0
 scipy==1.16.3
 six==1.17.0

@@ -1,4 +1,5 @@
 """Module for post-processing phonopy outputs."""
+
 import yaml
 import matplotlib.pyplot as plt
 from yaml import Loader
@@ -94,7 +95,10 @@ def get_phonon_tb(
 ):
     """Generate phonon TB Hamiltonia, along with WannierHamn."""
     if factor is None:
-        from phonopy.units import VaspToCm
+        from phonopy.units import THzToCm, VaspToTHz
+
+        # from phonopy.units import VaspToCm
+        VaspToCm = VaspToTHz * THzToCm  # [cm^-1] 521.47083
 
         factor = VaspToCm
     # Forked from Wannier-tools
@@ -104,7 +108,8 @@ def get_phonon_tb(
         PhonopyInputs(atoms).prim_axis().split("=")[1].split(), dtype="float"
     ).reshape(3, 3)
     # print("cell", unitcell.cell)
-    num_atom = unitcell.get_number_of_atoms()
+    num_atom = len(unitcell)  # .get_number_of_atoms()
+    # num_atom = unitcell.get_number_of_atoms()
     num_satom = determinant(scell) * num_atom
     if fc.shape[0] != num_satom:
         print("Check Force constant matrix.")
@@ -121,31 +126,40 @@ def get_phonon_tb(
         log_level=1,
     )
 
-    supercell = phonon.get_supercell()
-    primitive = phonon.get_primitive()
+    supercell = phonon.supercell
+    # supercell = phonon.get_supercell()
+    primitive = phonon.primitive
+    # primitive = phonon.get_primitive()
     # Set force constants
-    phonon.set_force_constants(fc)
+    phonon.force_constants = fc
+    # phonon.set_force_constants(fc)
     phonon._set_dynamical_matrix()
-    dmat = phonon._dynamical_matrix
+    # dmat = phonon._dynamical_matrix
     # rescale fcmat by THZ**2
+    dmat = phonon.dynamical_matrix
     fcmat = dmat._force_constants * factor**2  # FORCE_CONSTANTS
     # fcmat = dmat._force_constants * factor ** 2  # FORCE_CONSTANTS
-    smallest_vectors = dmat._smallest_vectors
+    # smallest_vectors = dmat._smallest_vectors
+    smallest_vectors, multi = dmat._pcell.get_smallest_vectors()
     # mass = dmat._mass
-    mass = dmat._pcell.get_masses()
+    # mass = dmat._pcell.get_masses()
+    mass = phonon.primitive.masses
     print("mass=", mass)
-    multi = dmat._multiplicity
-    reduced_bases = get_reduced_bases(supercell.get_cell(), symprec)
-    positions = np.dot(supercell.get_positions(), np.linalg.inv(reduced_bases))
+    # multi = dmat._multiplicity
+    # multi = dmat.multiplicity
+    reduced_bases = get_reduced_bases(supercell.cell, symprec)
+    # reduced_bases = get_reduced_bases(supercell.get_cell(), symprec)
+    positions = np.dot(supercell.positions, np.linalg.inv(reduced_bases))
     # for pos in positions: pos -= np.rint(pos)
-    relative_scale = np.dot(reduced_bases, np.linalg.inv(primitive.get_cell()))
+    relative_scale = np.dot(reduced_bases, np.linalg.inv(primitive.cell))
     super_pos = np.zeros((num_satom, 3), dtype=np.float64)
     for i in range(num_satom):
         super_pos[i] = np.dot(positions[i], relative_scale)
-    p2s_map = dmat._p2s_map = primitive.get_primitive_to_supercell_map()
-    s2p_map = dmat._s2p_map = primitive.get_supercell_to_primitive_map()
-    num_satom = supercell.get_number_of_atoms()
-    num_patom = primitive.get_number_of_atoms()
+    p2s_map = np.array(dmat._pcell.p2s_map, dtype="int64")
+    s2p_map = np.array(dmat._pcell.s2p_map, dtype="int64")
+
+    num_satom = len(supercell)  # .get_number_of_atoms()
+    num_patom = len(primitive)  # .get_number_of_atoms()
     get_phonon_hr(
         fcmat,
         smallest_vectors,

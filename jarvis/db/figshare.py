@@ -29,7 +29,7 @@ def get_db_info():
     db_info = {
         # https://doi.org/10.6084/m9.figshare.6815705
         "dft_2d": [
-            "https://ndownloader.figshare.com/files/38521268",
+            "https://figshare.com/ndownloader/files/38521268",
             "d2-12-12-2022.json",
             "Obtaining 2D dataset 1.1k ...",
             "https://www.nature.com/articles/s41524-020-00440-1"
@@ -37,7 +37,7 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.6815699
         "dft_3d": [
-            "https://ndownloader.figshare.com/files/38521619",
+            "https://figshare.com/ndownloader/files/38521619",
             "jdft_3d-12-12-2022.json",
             "Obtaining 3D dataset 76k ...",
             "https://www.nature.com/articles/s41524-020-00440-1"
@@ -45,21 +45,21 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.6815705
         "dft_2d_2021": [
-            "https://ndownloader.figshare.com/files/26808917",
+            "https://figshare.com/ndownloader/files/26808917",
             "d2-3-12-2021.json",
             "Obtaining 2D dataset 1.1k ...",
             "https://www.nature.com/articles/s41524-020-00440-1",
         ],
         # https://doi.org/10.6084/m9.figshare.6815699
         "dft_3d_2021": [
-            "https://ndownloader.figshare.com/files/29204826",
+            "https://figshare.com/ndownloader/files/29204826",
             "jdft_3d-8-18-2021.json",
             "Obtaining 3D dataset 55k ...",
             "https://www.nature.com/articles/s41524-020-00440-1",
         ],
         # https://doi.org/10.6084/m9.figshare.6815699
         "cfid_3d": [
-            "https://ndownloader.figshare.com/files/29205201",
+            "https://figshare.com/ndownloader/files/29205201",
             "cfid_3d-8-18-2021.json",
             "Obtaining 3D dataset 55k ...",
             "https://www.nature.com/articles/s41524-020-00440-1"
@@ -67,8 +67,8 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.14213522
         "jff": [
-            "https://ndownloader.figshare.com/files/28937793",
-            # "https://ndownloader.figshare.com/files/26809760",
+            "https://figshare.com/ndownloader/files/28937793",
+            # "https://figshare.com/ndownloader/files/26809760",
             "jff-7-24-2021.json",
             # "jff-3-12-2021.json",
             "Obtaining JARVIS-FF 2k ...",
@@ -76,76 +76,76 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.21667874
         "alignn_ff_db": [
-            "https://ndownloader.figshare.com/files/38522315",
-            # "https://ndownloader.figshare.com/files/26809760",
+            "https://figshare.com/ndownloader/files/38522315",
+            # "https://figshare.com/ndownloader/files/26809760",
             "id_prop.json",
             "Obtaining ALIGNN-FF training DB 300k ...",
             "https://doi.org/10.1039/D2DD00096B",
         ],
         "mp_3d_2020": [
-            "https://ndownloader.figshare.com/files/26791259",
+            "https://figshare.com/ndownloader/files/26791259",
             "all_mp.json",
             "Obtaining Materials Project-3D CFID dataset 127k...",
             "https://doi.org/10.1063/1.4812323",
         ],
         # https://doi.org/10.6084/m9.figshare.14177630
         "megnet": [
-            "https://ndownloader.figshare.com/files/26724977",
+            "https://figshare.com/ndownloader/files/26724977",
             "megnet.json",
             "Obtaining MEGNET-3D CFID dataset 69k...",
             "https://pubs.acs.org/doi/10.1021/acs.chemmater.9b01294",
         ],
         # https://doi.org/10.6084/m9.figshare.14745435
         "megnet2": [
-            "https://ndownloader.figshare.com/files/28332741",
+            "https://figshare.com/ndownloader/files/28332741",
             "megnet-mp-2019-04-01.json",
             "Obtaining MEGNET-3D CFID dataset 133k...",
             "https://pubs.acs.org/doi/10.1021/acs.chemmater.9b01294",
         ],
         # https://doi.org/10.6084/m9.figshare.14745327
         "edos_pdos": [
-            "https://ndownloader.figshare.com/files/29216859",
+            "https://figshare.com/ndownloader/files/29216859",
             "edos-up_pdos-elast_interp-8-18-2021.json",
             "Interpolated electronic total dos spin-up dataset 55k...",
             "https://www.nature.com/articles/s41524-020-00440-1",
         ],
         # https://doi.org/10.6084/m9.figshare.13054247
         "mp_3d": [
-            "https://ndownloader.figshare.com/files/24979850",
+            "https://figshare.com/ndownloader/files/24979850",
             "CFID_mp_desc_data_84k.json",
             "Obtaining Materials Project-3D CFID dataset 84k...",
             "https://doi.org/10.1063/1.4812323",
         ],
         # https://doi.org/10.6084/m9.figshare.13055333
         "oqmd_3d": [
-            "https://ndownloader.figshare.com/files/24981170",
+            "https://figshare.com/ndownloader/files/24981170",
             "CFID_OQMD_460k.json",
             "Obtaining OQMD-3D CFID dataset 460k...",
             "https://www.nature.com/articles/npjcompumats201510",
         ],
         # https://doi.org/10.6084/m9.figshare.14206169
         "oqmd_3d_no_cfid": [
-            "https://ndownloader.figshare.com/files/26790182",
+            "https://figshare.com/ndownloader/files/26790182",
             "all_oqmd.json",
             "Obtaining OQMD-3D  dataset 800k...",
             "https://www.nature.com/articles/npjcompumats201510",
         ],
         # https://doi.org/10.6084/m9.figshare.14205083
         "twod_matpd": [
-            "https://ndownloader.figshare.com/files/26789006",
+            "https://figshare.com/ndownloader/files/26789006",
             "twodmatpd.json",
             "Obtaining 2DMatPedia dataset 6k...",
             "https://www.nature.com/articles/s41597-019-0097-3",
         ],
         # https://doi.org/10.6084/m9.figshare.14213603
         "polymer_genome": [
-            "https://ndownloader.figshare.com/files/26809907",
+            "https://figshare.com/ndownloader/files/26809907",
             "pgnome.json",
             "Obtaining Polymer genome 1k...",
             "https://www.nature.com/articles/sdata201612",
         ],
         "qm9_std_jctc": [
-            "https://ndownloader.figshare.com/files/28715319",
+            "https://figshare.com/ndownloader/files/28715319",
             "qm9_std_jctc.json",
             "Obtaining QM9 standardized dataset 130k,"
             + "From https://doi.org/10.1021/acs.jctc.7b00577,+",
@@ -154,35 +154,35 @@ def get_db_info():
         # https://doi.org/10.6084/m9.figshare.14827584
         # Use qm9_std_jctc instaed
         "qm9_dgl": [
-            "https://ndownloader.figshare.com/files/28541196",
+            "https://figshare.com/ndownloader/files/28541196",
             "qm9_dgl.json",
             "Obtaining QM9 dataset 130k, from DGL...",
             "https://www.nature.com/articles/sdata201422",
         ],
         # https://doi.org/10.6084/m9.figshare.14912820.v1
         "cod": [
-            "https://ndownloader.figshare.com/files/28715301",
+            "https://figshare.com/ndownloader/files/28715301",
             "cod_db.json",
             "Obtaining COD dataset 431k",
             "https://doi.org/10.1107/S1600576720016532",
         ],
         # Use qm9_std_jctc instaed
         "qm9": [
-            "https://ndownloader.figshare.com/files/27627596",
+            "https://figshare.com/ndownloader/files/27627596",
             "qm9_data_cfid.json",
             "Obtaining QM9 dataset 134k...",
             "https://www.nature.com/articles/sdata201422",
         ],
         # https://doi.org/10.6084/m9.figshare.15127788
         "qe_tb": [
-            "https://ndownloader.figshare.com/files/29070555",
+            "https://figshare.com/ndownloader/files/29070555",
             "jqe_tb_folder.json",
             "Obtaining QETB dataset 860k...",
             "https://arxiv.org/abs/2112.11585",
         ],
         # https://doi.org/10.6084/m9.figshare.14812050
         "omdb": [
-            "https://ndownloader.figshare.com/files/28501761",
+            "https://figshare.com/ndownloader/files/28501761",
             "omdbv1.json",
             "Obtaining OMDB dataset 12.5k...",
             "https://doi.org/10.1002/qute.201900023",
@@ -203,10 +203,17 @@ def get_db_info():
         ],
         # https://figshare.com/account/projects/100325/articles/14960157
         "c2db": [
-            "https://ndownloader.figshare.com/files/28682010",
+            "https://figshare.com/ndownloader/files/28682010",
             "c2db_atoms.json",
             "Obtaining C2DB dataset 3.5k...",
             "https://iopscience.iop.org/article/10.1088/2053-1583/aacfc1",
+        ],
+        # https://doi.org/10.6084/m9.figshare.29458907
+        "ramandb": [
+            "https://figshare.com/ndownloader/files/55928318",
+            "ramandb.json",
+            "Obtaining Raman dataset 5k...",
+            "https://www.nature.com/articles/s41597-023-01988-5",
         ],
         # https://doi.org/10.6084/m9.figshare.25256236
         "halide_peroskites": [
@@ -217,49 +224,49 @@ def get_db_info():
         ],
         # https://figshare.com/account/projects/100325/articles/14962356
         "hopv": [
-            "https://ndownloader.figshare.com/files/28814184",
+            "https://figshare.com/ndownloader/files/28814184",
             "hopv_15.json",
             "Obtaining HOPV15 dataset 4.5k...",
             "https://www.nature.com/articles/sdata201686",
         ],
         # https://figshare.com/account/projects/100325/articles/14962356
         "pdbbind_core": [
-            "https://ndownloader.figshare.com/files/28874802",
+            "https://figshare.com/ndownloader/files/28874802",
             "pdbbind_2015_core.json",
             "Obtaining PDBBind dataset 195...",
             "https://doi.org/10.1093/bioinformatics/btu626",
         ],
         # https://doi.org/10.6084/m9.figshare.14812038
         "pdbbind": [
-            "https://ndownloader.figshare.com/files/28816368",
+            "https://figshare.com/ndownloader/files/28816368",
             "pdbbind_2015.json",
             "Obtaining PDBBind dataset 11k...",
             "https://doi.org/10.1093/bioinformatics/btu626",
         ],
         # https://doi.org/10.6084/m9.figshare.21713885
         "snumat": [
-            "https://ndownloader.figshare.com/files/38521736",
+            "https://figshare.com/ndownloader/files/38521736",
             "snumat.json",
             "Obtaining SNUMAT Hybrid functional dataset 10k...",
             "https://www.nature.com/articles/s41597-020-00723-8",
         ],
         # https://doi.org/10.6084/m9.figshare.13215308
         "aflow2": [
-            "https://ndownloader.figshare.com/files/25453265",
+            "https://figshare.com/ndownloader/files/25453265",
             "CFID_AFLOW2.json",
             "Obtaining AFLOW-2 CFID dataset 400k...",
             "https://doi.org/10.1016/j.commatsci.2012.02.005",
         ],
         # https://doi.org/10.6084/m9.figshare.14211860
         "arXiv": [
-            "https://ndownloader.figshare.com/files/26804795",
+            "https://figshare.com/ndownloader/files/26804795",
             "arXivdataset.json",
             "Obtaining arXiv dataset 1.8 million...",
             "https://www.kaggle.com/Cornell-University/arxiv",
         ],
         # https://doi.org/10.6084/m9.figshare.14211857
         "cord19": [
-            "https://ndownloader.figshare.com/files/26804798",
+            "https://figshare.com/ndownloader/files/26804798",
             "cord19.json",
             "Obtaining CORD19 dataset 223k...",
             "https://github.com/usnistgov/cord19-cdcs-nist",
@@ -508,7 +515,7 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.13154159
         "raw_files": [
-            "https://ndownloader.figshare.com/files/25295732",
+            "https://figshare.com/ndownloader/files/25295732",
             "figshare_data-10-28-2020.json",
             "Obtaining raw io files 145k...",
             "https://www.nature.com/articles/s41524-020-00440-1",
@@ -524,10 +531,10 @@ def get_db_info():
 def get_stm_2d_dataset():
     """Get 2D STM image dataset."""
     # Ref: https://www.nature.com/articles/s41597-021-00824-y
-    link_1 = "https://ndownloader.figshare.com/files/21884952"
+    link_1 = "https://figshare.com/ndownloader/files/21884952"
     r_jpg = requests.get(link_1)
     z = zipfile.ZipFile(io.BytesIO(r_jpg.content))
-    link_2 = "https://ndownloader.figshare.com/files/21893379"
+    link_2 = "https://figshare.com/ndownloader/files/21893379"
     r_json = requests.get(link_2).content
     latts = json.loads(r_json)
     namelist = z.namelist()
@@ -559,7 +566,7 @@ def get_stm_2d_dataset():
 
 def get_request_data(
     js_tag="jdft_2d-4-26-2020.json",
-    url="https://ndownloader.figshare.com/files/22471019",
+    url="https://figshare.com/ndownloader/files/22471019",
     store_dir=None,
 ):
     """Get data with progress bar."""
@@ -639,7 +646,7 @@ def data(dataset="dft_2d", store_dir=None):
 
 
 def get_jid_data(jid="JVASP-667", dataset="dft_2d"):
-    """Get info for a jid and dataset."""
+    """Get info eor a jid and dataset."""
     d = data(dataset)
     for i in d:
         if i["jid"] == jid:
@@ -650,7 +657,7 @@ def get_ff_eneleast():
     """Get JARVIS-FF related data."""
     jff1 = str(os.path.join(os.path.dirname(__file__), "jff1.json"))
     if not os.path.isfile(jff1):
-        r = requests.get("https://ndownloader.figshare.com/files/10307139")
+        r = requests.get("https://figshare.com/ndownloader/files/10307139")
         f = open(jff1, "wb")
         f.write(r.content)
         f.close()
@@ -669,6 +676,9 @@ def make_stm_from_prev_parchg(
         zip_name = jid + "_" + bias + ".zip"
         if i["name"] == zip_name:
             zip_file_url = i["download_url"]
+            zip_file_url = zip_file_url.replace(
+                "ndownloader.figshare.com", "figshare.com/ndownloader"
+            )
             r = requests.get(zip_file_url)
             z = zipfile.ZipFile(io.BytesIO(r.content))
             pchg = z.read("PARCHG").decode("utf-8")
@@ -693,7 +703,10 @@ def get_wann_electron(jid="JVASP-816"):
     fls = data("raw_files")
     for i in fls["WANN"]:
         if i["name"].split(".zip")[0] == jid:
-            r = requests.get(i["download_url"])
+            download_url = i["download_url"].replace(
+                "ndownloader.figshare.com", "figshare.com/ndownloader"
+            )
+            r = requests.get(download_url)
             z = zipfile.ZipFile(io.BytesIO(r.content))
             wdat = z.read("wannier90_hr.dat").decode("utf-8")
             js_file = jid + ".json"
@@ -727,7 +740,11 @@ def get_wann_phonon(jid="JVASP-1002", factor=15.633302):
     for i in fls["FD-ELAST"]:
         if isinstance(i, dict):
             if i["name"].split(".zip")[0] == jid:
-                r = requests.get(i["download_url"])
+                download_url = i["download_url"].replace(
+                    "ndownloader.figshare.com", "figshare.com/ndownloader"
+                )
+
+                r = requests.get(download_url)
                 z = zipfile.ZipFile(io.BytesIO(r.content))
                 vrun_path = z.read("vasprun.xml").decode("utf-8")
                 fd, path = tempfile.mkstemp()

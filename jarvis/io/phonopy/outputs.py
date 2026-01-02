@@ -152,15 +152,12 @@ def get_phonon_tb(
     positions = np.dot(supercell.positions, np.linalg.inv(reduced_bases))
     # for pos in positions: pos -= np.rint(pos)
     relative_scale = np.dot(reduced_bases, np.linalg.inv(primitive.cell))
-    # relative_scale = np.dot(reduced_bases, np.linalg.inv(primitive.get_cell()))
     super_pos = np.zeros((num_satom, 3), dtype=np.float64)
     for i in range(num_satom):
         super_pos[i] = np.dot(positions[i], relative_scale)
     p2s_map = np.array(dmat._pcell.p2s_map, dtype="int64")
     s2p_map = np.array(dmat._pcell.s2p_map, dtype="int64")
 
-    # p2s_map = dmat._p2s_map = primitive.get_primitive_to_supercell_map()
-    # s2p_map = dmat._s2p_map = primitive.get_supercell_to_primitive_map()
     num_satom = len(supercell)  # .get_number_of_atoms()
     num_patom = len(primitive)  # .get_number_of_atoms()
     get_phonon_hr(

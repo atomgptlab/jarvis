@@ -150,7 +150,6 @@ def get_phonon_tb(
     reduced_bases = get_reduced_bases(supercell.cell, symprec)
     # reduced_bases = get_reduced_bases(supercell.get_cell(), symprec)
     positions = np.dot(supercell.positions, np.linalg.inv(reduced_bases))
-    # positions = np.dot(supercell.get_positions(), np.linalg.inv(reduced_bases))
     # for pos in positions: pos -= np.rint(pos)
     relative_scale = np.dot(reduced_bases, np.linalg.inv(primitive.cell))
     # relative_scale = np.dot(reduced_bases, np.linalg.inv(primitive.get_cell()))

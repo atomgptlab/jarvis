@@ -32,6 +32,7 @@ jobs:
         shell: bash -l {0}
         run: |
             conda install pytest coverage codecov
+            rm jarvis/db/*.zip
             python setup.py develop
             coverage run -m pytest
             coverage report -m -i

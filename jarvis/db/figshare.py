@@ -646,7 +646,7 @@ def data(dataset="dft_2d", store_dir=None):
 
 
 def get_jid_data(jid="JVASP-667", dataset="dft_2d"):
-    """Get info for a jid and dataset."""
+    """Get info eor a jid and dataset."""
     d = data(dataset)
     for i in d:
         if i["jid"] == jid:
@@ -676,6 +676,9 @@ def make_stm_from_prev_parchg(
         zip_name = jid + "_" + bias + ".zip"
         if i["name"] == zip_name:
             zip_file_url = i["download_url"]
+            zip_file_url = zip_file_url.replace(
+                "ndownloader.figshare.com", "figshare.com/ndownloader"
+            )
             r = requests.get(zip_file_url)
             z = zipfile.ZipFile(io.BytesIO(r.content))
             pchg = z.read("PARCHG").decode("utf-8")
@@ -700,7 +703,10 @@ def get_wann_electron(jid="JVASP-816"):
     fls = data("raw_files")
     for i in fls["WANN"]:
         if i["name"].split(".zip")[0] == jid:
-            r = requests.get(i["download_url"])
+            download_url = i["download_url"].replace(
+                "ndownloader.figshare.com", "figshare.com/ndownloader"
+            )
+            r = requests.get(download_url)
             z = zipfile.ZipFile(io.BytesIO(r.content))
             wdat = z.read("wannier90_hr.dat").decode("utf-8")
             js_file = jid + ".json"
@@ -734,7 +740,11 @@ def get_wann_phonon(jid="JVASP-1002", factor=15.633302):
     for i in fls["FD-ELAST"]:
         if isinstance(i, dict):
             if i["name"].split(".zip")[0] == jid:
-                r = requests.get(i["download_url"])
+                download_url = i["download_url"].replace(
+                    "ndownloader.figshare.com", "figshare.com/ndownloader"
+                )
+
+                r = requests.get(download_url)
                 z = zipfile.ZipFile(io.BytesIO(r.content))
                 vrun_path = z.read("vasprun.xml").decode("utf-8")
                 fd, path = tempfile.mkstemp()

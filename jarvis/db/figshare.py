@@ -516,6 +516,25 @@ def get_db_info():
             "Obtaining Alexandria_SuperConDB 8253...",
             "https://doi.org/10.1002/adfm.202404043",
         ],
+        # https://doi.org/10.6084/m9.figshare.31817977
+        "rruff_powder_xrd": [
+            "https://ndownloader.figshare.com/files/62967574",
+            "rruff_powder_xrd.json",
+            "Obtaining RRUFF powder XRD 1362...",
+            "https://www.rruff.net/about/download-data/",
+        ],
+        "rruff_raman_excellent": [
+            "https://ndownloader.figshare.com/files/62967571",
+            "rruff_raman_excellent.json",
+            "Obtaining RRUFF Raman data 7688...",
+            "https://www.rruff.net/about/download-data/",
+        ],
+        "rruff_ir": [
+            "https://ndownloader.figshare.com/files/62967781",
+            "rruff_ir.json",
+            "Obtaining RRUFF IR data 824...",
+            "https://www.rruff.net/about/download-data/",
+        ],
         # https://doi.org/10.6084/m9.figshare.13154159
         "raw_files": [
             "https://ndownloader.figshare.com/files/25295732",

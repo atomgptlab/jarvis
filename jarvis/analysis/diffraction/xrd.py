@@ -429,9 +429,9 @@ def plot_xrd_2d(
             ax.set_yticklabels(valid_labels, fontsize=7)
 
         plt.tight_layout()
-        return matrix, thetas, fig
+        return matrix, theta_grid, fig
 
-    return matrix, thetas, None
+    return matrix, theta_grid, None
 
 
 def sharpen_peaks(y, sigma=0.5):

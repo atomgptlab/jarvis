@@ -9,6 +9,8 @@ from scipy import sparse
 from scipy.sparse.linalg import spsolve
 import itertools
 from scipy.ndimage import gaussian_filter1d
+from typing import Tuple, List, Optional, Sequence
+import matplotlib.pyplot as plt
 
 # from jarvis.core.spectrum import Spectrum
 # from jarvis.analysis.structure.spacegroup import Spacegroup3D,
@@ -225,7 +227,22 @@ def baseline_als(y, lam, p, niter=10):
     return z
 
 
-def recast_array(x_original, y_original, x_new, tol=0.1):
+def recast_array(
+    x_original: Sequence[float] = [],
+    y_original: Sequence[float] = [],
+    x_new: np.ndarray = np.arange(0, 90, 1),
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Map a irregular list of (x, y) pairs onto a regular grid."""
+    x_original = np.asarray(x_original)
+    y_new = np.full_like(x_new, 0, dtype=np.float64)
+    for x_val, y_val in zip(x_original, y_original):
+        # pick the closest index on the new grid
+        closest = np.abs(x_new - x_val).argmin()
+        y_new[closest] = y_val
+    return x_new, y_new
+
+
+def recast_array_old(x_original, y_original, x_new, tol=0.1):
     """Recast original spectrum onto a new grid, accumulating close values."""
     x_original = np.array(x_original)
     y_new = np.zeros_like(x_new, dtype=np.float64)
@@ -238,6 +255,181 @@ def recast_array(x_original, y_original, x_new, tol=0.1):
     # Remove noise below tolerance level
     y_new[y_new < tol] = 0
     return x_new, y_new
+
+
+def _broaden_pattern(
+    x: np.ndarray, y: np.ndarray, sigma: float = 0.15
+) -> np.ndarray:
+    """Apply a Gaussian kernel to smooth the pattern."""
+    if len(x) < 2:
+        return y
+    step = x[1] - x[0]
+    n_side = int(np.ceil(4 * sigma / step))
+    kernel_x = np.arange(-n_side, n_side + 1) * step
+    kernel = np.exp(-0.5 * (kernel_x / sigma) ** 2)
+    kernel /= kernel.sum()
+    return np.convolve(y, kernel, mode="same")
+
+
+def xrd_fingerprint(
+    atoms: Atoms,
+    theta_grid: np.ndarray = np.arange(0, 90, 0.18),
+    wavelength: float = 1.54184,
+    sigma: float = 0.15,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Compute a *broadened and normalised* X‑ray diffraction fingerprint.
+    Returns (theta_grid, intensity), where `theta_grid` is the 2θ axis
+    and `intensity` is motion‑free (0–1 normalised).
+    """
+    # Use this
+    # Simulate the raw XRD pattern using the JARVIS routine
+    theta, d_hkls, intens = XRD(
+        thetas=[0, 90], wavelength=wavelength
+    ).simulate(atoms=atoms)
+    intens = np.asarray(intens, dtype=float) / max(intens)
+
+    # Map onto the requested regular grid
+    _, y_binned = recast_array(
+        x_original=theta, y_original=intens, x_new=theta_grid
+    )
+
+    # Gaussian broadening
+    y_broad = _broaden_pattern(theta_grid, y_binned, sigma=sigma)
+
+    # Normalise to unit maximum
+    if y_broad.max() > 0:
+        y_broad /= y_broad.max()
+
+    return theta_grid, y_broad
+
+
+def plot_xrd(
+    atoms: Atoms,
+    theta_grid: np.ndarray = np.arange(0, 90, 0.18),
+    wavelength: float = 1.54184,
+    sigma: float = 0.15,
+    plot: bool = False,
+    ax: Optional[plt.Axes] = None,
+) -> Tuple[np.ndarray, np.ndarray, Optional[plt.Axes]]:
+    """
+    Return the XRD fingerprint, and if *plot* is True also return a Matplotlib
+    figure/axes object with the pattern rendered.
+    """
+    thetas, intens = xrd_fingerprint(atoms, theta_grid, wavelength, sigma)
+
+    if plot:
+        if ax is None:
+            fig, ax = plt.subplots(figsize=(8, 3))
+        ax.plot(thetas, intens, lw=1.5)
+        ax.set_xlabel("2θ (°)")
+        ax.set_ylabel("Normalised intensity")
+        ax.set_title(f"XRD: {atoms.composition.reduced_formula}")
+        return thetas, intens, ax
+
+    return thetas, intens, None
+
+
+def plot_xrd_rings(
+    atoms: Atoms,
+    theta_grid: np.ndarray = np.arange(0, 90, 0.18),
+    wavelength: float = 1.54184,
+    sigma: float = 0.15,
+    img_size: int = 512,
+    cmap: str = "hot",
+    figsize: Tuple[float, float] = (6, 6),
+    plot: bool = False,
+) -> Tuple[np.ndarray, np.ndarray, "Optional[matplotlib.figure.Figure]"]:
+    """
+    Simulate a Debye‑Scherrer 2D ring pattern.
+    Returns the (thetas, intensity) tuple as well as the optional figure.
+    """
+    thetas, intens = xrd_fingerprint(atoms, theta_grid, wavelength, sigma)
+
+    # Build a radial image that maps 2θ onto radius
+    r_max = img_size // 2
+    center = r_max
+    yy, xx = np.mgrid[:img_size, :img_size]
+    r = np.hypot(xx - center, yy - center)
+    r_norm = r / r_max
+    theta_idx = np.clip(
+        (r_norm * (len(thetas) - 1)).astype(int), 0, len(thetas) - 1
+    )
+    img = intens[theta_idx]
+
+    # Optional noise for realism
+    noise = np.random.normal(0, 0.02, img.shape)
+    img = np.clip(img + noise, 0, 1)
+
+    if plot:
+        fig, ax = plt.subplots(figsize=figsize)
+        im = ax.imshow(img, cmap=cmap, vmin=0, vmax=1)
+        ax.set_title(f"Debye‑Scherrer: {atoms.composition.reduced_formula}")
+        ax.axis("off")
+        fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+        plt.tight_layout()
+        return thetas, intens, fig
+
+    return thetas, intens, None
+
+
+def plot_xrd_2d(
+    atoms_list: Sequence[Atoms],
+    theta_grid: np.ndarray = np.arange(0, 90, 0.18),
+    wavelength: float = 1.54184,
+    sigma: float = 0.15,
+    labels: Optional[List[str]] = None,
+    cmap: str = "viridis",
+    figsize: Tuple[float, float] = (10, 6),
+    plot: bool = False,
+) -> Tuple[np.ndarray, np.ndarray, Optional[plt.Figure]]:
+    """
+    Build a 2‑D heat‑map where each row is a different material.
+    Returns the matrix and the optional figure/axes.
+    """
+    patterns = []
+    valid_labels = []
+
+    for idx, atoms in enumerate(tqdm(atoms_list, desc="Computing XRD")):
+        try:
+            _, intens = xrd_fingerprint(atoms, theta_grid, wavelength, sigma)
+            patterns.append(intens)
+            valid_labels.append(labels[idx] if labels else f"{idx}")
+        except Exception as exc:
+            # Skip problematic structures silently
+            print(
+                f"[WARN] {atoms.composition.reduced_formula!r} skipped → {exc}"
+            )
+
+    if not patterns:
+        raise ValueError("No valid XRD patterns could be computed")
+
+    matrix = np.vstack(patterns)
+
+    if plot:
+        fig, ax = plt.subplots(figsize=figsize)
+        im = ax.imshow(
+            matrix,
+            aspect="auto",
+            origin="lower",
+            extent=[theta_grid[0], theta_grid[-1], 0, len(matrix)],
+            cmap=cmap,
+            vmin=0,
+            vmax=1,
+        )
+        ax.set_xlabel("2θ (°)")
+        ax.set_ylabel("Material index")
+        ax.set_title(f"2‑D diffractogram ({len(matrix)} materials)")
+        plt.colorbar(im, ax=ax, label="Normalised intensity")
+
+        if labels and len(valid_labels) <= 30:
+            ax.set_yticks(np.arange(len(valid_labels)) + 0.5)
+            ax.set_yticklabels(valid_labels, fontsize=7)
+
+        plt.tight_layout()
+        return matrix, thetas, fig
+
+    return matrix, thetas, None
 
 
 def sharpen_peaks(y, sigma=0.5):

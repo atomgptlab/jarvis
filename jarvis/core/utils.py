@@ -10,6 +10,7 @@ import math
 import xmltodict
 import re
 import requests
+import os
 
 
 def xml_to_dict(fname):
@@ -380,9 +381,6 @@ def recast_array(
         y_new[closest_index] = y_val
     # y_new[y_new<tol]=0
     return x_new, y_new
-
-
-import os
 
 
 def get_cache_dir(subdir=""):

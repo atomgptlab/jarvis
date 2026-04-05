@@ -382,6 +382,21 @@ def recast_array(
     return x_new, y_new
 
 
+import os
+
+
+def get_cache_dir(subdir=""):
+    """Get or create cache directory, respecting ATOMGPTLAB_CACHE env var."""
+    base = os.environ.get(
+        "ATOMGPTLAB_CACHE",
+        os.path.join(os.path.expanduser("~"), ".cache", "atomgptlab"),
+    )
+    if subdir:
+        base = os.path.join(base, subdir)
+    os.makedirs(base, exist_ok=True)
+    return base
+
+
 # def is_xml_valid(xsd="jarvisdft.xsd", xml="JVASP-1002.xml"):
 #   """Check if XML is valid."""
 #   xml_file = etree.parse(xml)

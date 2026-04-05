@@ -14,6 +14,7 @@ import requests
 from jarvis.db.jsonutils import loadjson
 from tqdm import tqdm
 import matplotlib.image as mpimg
+from jarvis.core.utils import get_cache_dir
 
 # from jarvis.analysis.stm.tersoff_hamann import TersoffHamannSTM
 # from jarvis.io.wannier.outputs import WannierHam
@@ -167,6 +168,13 @@ def get_db_info():
             "https://ndownloader.figshare.com/files/28715301",
             "cod_db.json",
             "Obtaining COD dataset 431k",
+            "https://doi.org/10.1107/S1600576720016532",
+        ],
+        # https://doi.org/10.6084/m9.figshare.14912820.v1
+        "cod_200": [
+            "https://figshare.com/ndownloader/files/63463986",
+            "cod_200.json",
+            "Obtaining COD dataset 237k",
             "https://doi.org/10.1107/S1600576720016532",
         ],
         # Use qm9_std_jctc instaed
@@ -594,10 +602,13 @@ def get_request_data(
     """Get data with progress bar."""
     zfile = js_tag + ".zip"
     if store_dir is None:
-        path = str(os.path.join(os.path.dirname(__file__), zfile))
-    else:
-        path = str(os.path.join(store_dir, zfile))
+        store_dir = get_cache_dir("jarvis_data")
 
+    # if store_dir is None:
+    #    path = str(os.path.join(os.path.dirname(__file__), zfile))
+    # else:
+    #    path = str(os.path.join(store_dir, zfile))
+    path = os.path.join(store_dir, zfile)
     # path = str(os.path.join(os.path.dirname(__file__), js_tag))
     if not os.path.isfile(path):
         # zfile = str(os.path.join(os.path.dirname(__file__), "tmp.zip"))

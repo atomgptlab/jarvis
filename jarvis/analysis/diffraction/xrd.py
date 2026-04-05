@@ -13,7 +13,7 @@ from typing import Tuple, List, Optional, Sequence
 import matplotlib.pyplot as plt
 from jarvis.core.atoms import Atoms
 from tqdm import tqdm
-
+import matplotlib
 # from jarvis.core.spectrum import Spectrum
 # from jarvis.analysis.structure.spacegroup import Spacegroup3D,
 

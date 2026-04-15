@@ -158,6 +158,70 @@ class HermitianSolver(object):
         mode="min_val",
         ibm_token=None,
     ):
+        """Run variational quantum eigensolver."""
+        seed = 50
+        N = self.n_qubits()
+
+        estimator = _get_estimator(
+            backend=backend, seed=seed, ibm_token=ibm_token
+        )
+
+        if mode == "max_val":
+            Hamil_qop = decompose_Hamiltonian(-1 * self.mat)
+        else:
+            Hamil_qop = decompose_Hamiltonian(self.mat)
+
+        if var_form is None:
+            if reps is None:
+                reps = 2
+            var_form = EfficientSU2(N, reps=reps)
+
+        if optimizer is None:
+            optimizer = SLSQP()
+
+        # ── ISA TRANSPILATION FOR REAL HARDWARE ──
+        # IBM hardware (post Mar 2024) requires transpiled circuits matching
+        # the backend's basis gates and qubit connectivity.
+        is_hardware = not (
+            backend == "statevector_simulator" or backend.startswith("aer")
+        )
+        if is_hardware:
+            from qiskit.transpiler.preset_passmanagers import (
+                generate_preset_pass_manager,
+            )
+            from qiskit_ibm_runtime import QiskitRuntimeService
+
+            service = QiskitRuntimeService()
+            hw_backend = service.backend(backend)
+
+            # Transpile ansatz to ISA
+            pm = generate_preset_pass_manager(
+                target=hw_backend.target, optimization_level=2
+            )
+            var_form = pm.run(var_form)
+
+            # Observable must be re-mapped to the transpiled circuit's qubit layout
+            Hamil_qop = Hamil_qop.apply_layout(var_form.layout)
+
+        vqe = VQE(estimator, var_form, optimizer)
+        np.random.seed(seed)
+        result = vqe.compute_minimum_eigenvalue(operator=Hamil_qop)
+        en = result.eigenvalue
+
+        if mode == "max_val":
+            en = -1 * en
+
+        return en, result, vqe
+
+    def run_vqe_old(
+        self,
+        backend="statevector_simulator",
+        var_form=None,
+        optimizer=None,
+        reps=None,
+        mode="min_val",
+        ibm_token=None,
+    ):
         """Run variational quantum eigensolver.
 
         Parameters

@@ -172,7 +172,7 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.14912820.v1
         "cod_200": [
-            "https://figshare.com/ndownloader/files/63463986",
+            "https://ndownloader.figshare.com/files/63463986",
             "cod_200.json",
             "Obtaining COD dataset 237k",
             "https://doi.org/10.1107/S1600576720016532",

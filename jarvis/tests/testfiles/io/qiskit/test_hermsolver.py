@@ -1,14 +1,12 @@
-from qiskit import Aer
-from qiskit.utils import QuantumInstance, algorithm_globals
-from qiskit.algorithms import VQE
-from qiskit.algorithms.optimizers import SLSQP
+#from qiskit.utils import QuantumInstance, algorithm_globals
+#from qiskit.algorithms import VQE
+#from qiskit.algorithms.optimizers import SLSQP
 import numpy as np
 import itertools, functools
-from qiskit.opflow import I, X, Y, Z
+#from qiskit.opflow import I, X, Y, Z
 from jarvis.db.figshare import get_wann_electron, get_wann_phonon, get_hk_tb
 from jarvis.core.circuits import QuantumCircuitLibrary
 from jarvis.io.qiskit.inputs import HermitianSolver
-from qiskit import Aer
 
 
 def decompose_Hamiltonian(H):
@@ -37,6 +35,31 @@ def decompose_Hamiltonian(H):
     return decomposedH
 
 
+def test_qiskit():
+    from jarvis.db.figshare import get_wann_electron, get_hk_tb
+    from jarvis.io.qiskit.inputs import HermitianSolver
+    from jarvis.core.circuits import QuantumCircuitLibrary
+
+    # Aluminum JARVIS-ID: JVASP-816
+    wtbh, Ef, atoms = get_wann_electron("JVASP-1002")
+    kpt = [0.5, 0.0, 0.5]  # X-point
+    hk = get_hk_tb(w=wtbh, k=kpt)
+
+    HS = HermitianSolver(hk)
+    n_qubits = HS.n_qubits()
+    circ = QuantumCircuitLibrary(n_qubits=n_qubits, reps=1).circuit6()
+
+    # Backend is now a string identifier; the StatevectorEstimator V2
+    # primitive is constructed internally by HermitianSolver.run_vqe()
+    en, vqe_result, vqe = HS.run_vqe(var_form=circ, backend="statevector_simulator")
+
+    vals, vecs = HS.run_numpy()
+
+    # Ef: Fermi-level
+    print("Classical, VQE (eV):", vals[0] - Ef, en - Ef)
+    print("Show model\n", circ)
+
+"""
 def test_qiskit():
     wtbh, Ef, atoms = get_wann_electron("JVASP-816")
     kpt = [0.5, 0.0, 0.5]  # X-point
@@ -80,7 +103,6 @@ def test_statvector():
     print("Show model\n", circ)
 
 
-"""
 # Commenting due to pypi conflicts in qiskit
 #
 # from qiskit.circuit.library import EfficientSU2

@@ -35,7 +35,8 @@ def _get_estimator(backend="statevector_simulator", seed=50):
         - "aer_simulator_statevector" : Aer with statevector method
         - "aer_simulator_density_matrix" : Aer with density matrix method
         - "aer_simulator_mps"   : Aer with matrix product state method
-        Any string starting with "aer" will use qiskit_aer.primitives.EstimatorV2.
+        Any string starting with "aer" will use
+        qiskit_aer.primitives.EstimatorV2.
         For IBM hardware, pass the backend name (requires qiskit-ibm-runtime).
     seed : int
         Random seed for reproducibility.

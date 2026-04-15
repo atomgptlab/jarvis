@@ -246,7 +246,7 @@ dependencies:
       - python-dateutil==2.8.2
       - pyyaml==6.0.1
       - pyyaml-env-tag==0.1
-      - qiskit==0.41.1
+      - qiskit>=0.41.1
       - qiskit-aer==0.11.2
       - qiskit-ibmq-provider==0.20.1
       - qiskit-terra==0.23.2

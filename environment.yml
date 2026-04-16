@@ -246,9 +246,9 @@ dependencies:
       - python-dateutil==2.8.2
       - pyyaml==6.0.1
       - pyyaml-env-tag==0.1
-      - qiskit
-      - qiskit-aer
-      - qiskit_algorithms
+      - qiskit>=2.3.1
+      - qiskit-aer>=0.17.2
+      - qiskit_algorithms>=0.4.1
       - rustworkx
       - regex==2023.12.25
       - requests==2.28.2
@@ -257,8 +257,8 @@ dependencies:
       - scikit-learn==1.4.1.post1
       - scipy==1.12.0
       - semantic-version==2.6.0
-      - spglib==2.3.1
-      - stevedore==5.2.0
+      - spglib==2.7.0
+      - stevedore==5.7.0
       - symengine==0.11.0
       - sympy==1.12
       - threadpoolctl==3.3.0

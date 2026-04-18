@@ -1,303 +1,252 @@
 # Tutorials
 
-## Quickstart with Jupyter/Google-colab notebooks: https://github.com/usnistgov/aims2024_workshop
+A guided tour of the most common JARVIS-Tools workflows. For runnable
+notebooks, see the
+[AIMS 2024 workshop](https://github.com/usnistgov/aims2024_workshop)
+and the
+[jarvis-tools-notebooks gallery](https://github.com/JARVIS-Materials-Design/jarvis-tools-notebooks).
 
-More detailed tutorials below:
+## Atomic structures
 
-## How to analyze an atomic structure
+Atomic structures are the input to nearly every simulation in
+JARVIS-Tools — DFT, molecular dynamics, Monte Carlo, atomistic graph
+neural networks. A structure is defined by element types, fractional or
+Cartesian coordinates, and a lattice matrix that sets the periodic
+boundary conditions.
 
-Atomic structure act as an input to multiple simulations such as for
-density functional theory, molecular dyanmics, Monte Carlo, atomistic
-graph neural network etc. So, we provide a very bried introduction to
-the atomic structure here. For more general information, refer to
-solid-state physics or introduction to materials-science books.
+The example below builds a silicon primitive cell. The same pattern
+applies to multi-component systems.
 
-An atomic structure can consist of atomic element types, corresponding
-xyz coordinates in space (either in real or reciprocal space) and
-lattice matrix used in setting periodic boundary conditions.
-
-An example of constructing an atomic structure class using
-`jarvis.core.Atoms` is given below. After creating the Atoms class, we
-can simply print it and visualize the POSCAR format file in a software
-such as VESTA. While the examples below use Silicon elemental crystal
-creation and analysis, it can be used for multi-component systems as
-well.
-
-``` python
+```python
 from jarvis.core.atoms import Atoms
+
 box = [[2.715, 2.715, 0], [0, 2.715, 2.715], [2.715, 0, 2.715]]
 coords = [[0, 0, 0], [0.25, 0.25, 0.25]]
 elements = ["Si", "Si"]
+
 Si = Atoms(lattice_mat=box, coords=coords, elements=elements, cartesian=False)
-print (Si) # To visualize 
-Si.write_poscar('POSCAR.vasp')
-Si.write_cif('POSCAR.vasp')
+print(Si)                 # POSCAR-style printout
+Si.write_poscar("POSCAR.vasp")
+Si.write_cif("Si.cif")
 ```
 
-The <span class="title-ref">Atoms</span> class here is created from the
-raw data, but it can also be read from different file formats such as:
-<span class="title-ref">'.cif', 'POSCAR', '.xyz', '.pdb', '.sdf',
-'.mol2'</span> etc. The Atoms class can also be written to files in
-formats such as POSCAR/.cif etc.
+The `Atoms` class can also be loaded from `.cif`, `POSCAR`, `.xyz`,
+`.pdb`, `.sdf`, or `.mol2` files, and written back out to any of those
+formats.
 
-Note that for molecular systems, we use a large vaccum padding (say 50
-Angstrom in each direction) and set lattice_mat accordingly, e.g.
-lattice_mat = \[\[50,0,0\],\[0,50,0\],\[0,0,50\]\]. Similarly, for free
-surfaces we set high vaccum in one of the crystallographic directions
-(say z) by giving a large z-comonent in the lattice matrix while keeping
-the x, y comonents intact.
+For molecular systems, pad with vacuum (e.g. 50 Å in each direction):
+`lattice_mat=[[50,0,0],[0,50,0],[0,0,50]]`. For free surfaces, add
+vacuum along one crystallographic direction (typically z) while keeping
+the in-plane lattice vectors intact.
 
-``` python
-my_atoms = Atoms.from_poscar('POSCAR')
-my_atoms.write_poscar('MyPOSCAR')
+```python
+my_atoms = Atoms.from_poscar("POSCAR")
+my_atoms.write_poscar("MyPOSCAR")
 ```
 
-Once this Atoms class is created, several imprtant information can be
-obtained such as:
+Once an `Atoms` object exists, common quantities are one attribute away:
 
-``` python
-print ('volume',Si.volume)
-print ('density in g/cm3', Si.density)
-print ('composition as dictionary', Si.composition)
-print ('Chemical formula', Si.composition.reduced_formula)
-print ('Spacegroup info', Si.spacegroup())
-print ('lattice-parameters', Si.lattice.abc, Si.lattice.angles)
-print ('packing fraction',Si.packing_fraction)
-print ('number of atoms',Si.num_atoms)
-print ('Center of mass', Si.get_center_of_mass())
-print ('Atomic number list', Si.atomic_numbers)
+```python
+print("volume          ", Si.volume)
+print("density (g/cm³) ", Si.density)
+print("composition     ", Si.composition)
+print("formula         ", Si.composition.reduced_formula)
+print("space group     ", Si.spacegroup())
+print("lattice (abc)   ", Si.lattice.abc, Si.lattice.angles)
+print("packing fraction", Si.packing_fraction)
+print("num atoms       ", Si.num_atoms)
+print("center of mass  ", Si.get_center_of_mass())
+print("atomic numbers  ", Si.atomic_numbers)
 ```
 
-For creating/accessing dataset(s), we use `Atoms.from_dict()` and
-`Atoms.to_dict()` methods:
+To round-trip through dicts (useful for serializing to JSON):
 
-``` python
+```python
 d = Si.to_dict()
 new_atoms = Atoms.from_dict(d)
 ```
 
-The <span class="title-ref">jarvis.core.Atoms</span> object can be
-converted back and forth to other simulation toolsets such as Pymatgen
-and ASE if insyalled, as follows
+To convert to/from other toolkits:
 
-``` python
-pmg_struct = Si.pymatgen_converter()
-ase_atoms = Si.ase_converter()
+```python
+pmg_struct = Si.pymatgen_converter()   # requires pymatgen
+ase_atoms  = Si.ase_converter()        # requires ase
 ```
 
-In order to make supercell, the following example can be used:
+Supercells:
 
-``` python
-supercell_1 = Si.make_supercell([2,2,2])
-supercell_2 = Si.make_supercell_matrix([[2,0,0],[0,2,0],[0,0,2]])
-supercell_1.density == supercell_2.density
+```python
+supercell_1 = Si.make_supercell([2, 2, 2])
+supercell_2 = Si.make_supercell_matrix([[2, 0, 0], [0, 2, 0], [0, 0, 2]])
+assert supercell_1.density == supercell_2.density
 ```
 
-### How to get RDF, ADF, DDF
+### Radial, angular, and dihedral distribution functions
 
-Nearest-neighbor analysis one of the most important tools in atomistic
-simulations. Quantities such as radial (RDF), angle (ADF) and dihedral
-(DDF) distribution functions can be obtained using
-<span class="title-ref">jarvis.analysis.structure.neighbors.NeighborsAnalysis</span>
-class as shown in the following example using the Si Atoms class
-obtained above. Different cut-off parameters for angle and sihedral
-distribution are used to narrow down the number of neighbors. For
-details, please look into respective modules.
+`NeighborsAnalysis` computes radial (RDF), angular (ADF), and dihedral
+(DDF) distribution functions. Different cutoffs limit how many neighbors
+are considered for the angular and dihedral distributions; see the
+module reference for details.
 
-``` python
+```python
+from jarvis.analysis.structure.neighbors import NeighborsAnalysis
+import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
+
 nb = NeighborsAnalysis(Si)
-bins_rdf, rdf, nbs = nb.get_rdf() #Global Radial distribution function
-adfa, bins_a = nb.ang_dist_first() #Angular distribution function upto first neighbor
-adfb, bins_b = nb.ang_dist_second() #Angular distribution function upto second neighbor
-ddf, bins_d = nb.get_ddf() #Dihedral distribution function upto first neighbor
-import matplotlib
-%matplotlib inline
-import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
+bins_rdf, rdf, _   = nb.get_rdf()           # global RDF
+adfa, bins_a       = nb.ang_dist_first()    # ADF, first-neighbor cutoff
+adfb, bins_b       = nb.ang_dist_second()   # ADF, second-neighbor cutoff
+ddf,  bins_d       = nb.get_ddf()           # DDF, first-neighbor cutoff
 
-the_grid = GridSpec(2, 2)
-plt.rcParams.update({'font.size': 24})
-plt.figure(figsize=(16,14))
+grid = GridSpec(2, 2)
+plt.rcParams.update({"font.size": 24})
+plt.figure(figsize=(16, 14))
 
-plt.subplot(the_grid[0, 0])
-plt.title('(a) RDF')
-plt.plot(bins_rdf, rdf)
-plt.xlabel(r'Distance bins ($\AA$)')
+plt.subplot(grid[0, 0]); plt.title("(a) RDF")
+plt.plot(bins_rdf, rdf); plt.xlabel(r"Distance ($\AA$)")
 
-plt.subplot(the_grid[0, 1])
-plt.title('(b) ADF-a')
-plt.plot(bins_a[:-1], adfa)
-plt.xlabel(r'Angle bins ($^\circ$)')
+plt.subplot(grid[0, 1]); plt.title("(b) ADF-a")
+plt.plot(bins_a[:-1], adfa); plt.xlabel(r"Angle ($^\circ$)")
 
-plt.subplot(the_grid[1, 0])
-plt.title('(c) ADF-b')
-plt.plot(bins_b[:-1], adfb)
-plt.xlabel(r'Angle bins ($^\circ$)')
+plt.subplot(grid[1, 0]); plt.title("(c) ADF-b")
+plt.plot(bins_b[:-1], adfb); plt.xlabel(r"Angle ($^\circ$)")
 
-plt.subplot(the_grid[1, 1])
-plt.title('(d) DDF')
-plt.plot(bins_d[:-1], ddf)
-plt.xlabel(r'Angle bins ($^\circ$)')
+plt.subplot(grid[1, 1]); plt.title("(d) DDF")
+plt.plot(bins_d[:-1], ddf); plt.xlabel(r"Angle ($^\circ$)")
 plt.tight_layout()
 ```
 
-### How to get XRD paterns
+### XRD patterns
 
-X-ray diffraction patterns act as one of the most important experimental
-methods for determining atomic structure. Using Cu-K alpha wavelength,
-the theoretical XRD patterns (two-theta and d_hkl dependence) for Si
-class above can be obatined as follows.
+Theoretical XRD patterns (2θ and d_hkl) using Cu-Kα radiation:
 
-``` python
+```python
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
+from jarvis.analysis.diffraction.xrd import XRD
 
-Si = Atoms(lattice_mat=box, coords=coords, elements=elements)
-a, b, c = XRD().simulate(atoms=atoms)
+two_theta, d_hkl, intensity = XRD().simulate(atoms=Si)
 
-the_grid = GridSpec(1,2)
-plt.rcParams.update({'font.size': 24})
-plt.figure(figsize=(10,5))
+grid = GridSpec(1, 2)
+plt.rcParams.update({"font.size": 24})
+plt.figure(figsize=(10, 5))
 
-plt.subplot(the_grid[0])
-plt.bar(a,c)
-plt.xlabel('2$\Theta$')
-plt.ylabel('XRD intensity')
-plt.subplot(the_grid[1])
-plt.bar(a,b)
-plt.xlabel('d$_{hkl}$')
-plt.ylabel('XRD intensity')
+plt.subplot(grid[0])
+plt.bar(two_theta, intensity)
+plt.xlabel(r"2$\Theta$"); plt.ylabel("XRD intensity")
+
+plt.subplot(grid[1])
+plt.bar(two_theta, d_hkl)
+plt.xlabel(r"d$_{hkl}$"); plt.ylabel("XRD intensity")
 plt.tight_layout()
 ```
 
-### How to make defects
+### Defects: vacancies, surfaces, and heterostructures
 
-While the above Si atomic structure generated above is perfect/defect
-free, in reality there can be several defects present in an atomic
-structure such as point defects (vacancies, interstitials,
-substituions), line defects (dislocations), surface-defects
-(free-surfaces, grain boundaries, stacking faults, interfaces),
-volume-defects (voids/pores) etc.
+Real materials contain point defects (vacancies, interstitials,
+substitutions), line defects (dislocations), surface defects (free
+surfaces, grain boundaries, stacking faults, interfaces), and volume
+defects (voids, pores). JARVIS-Tools generates several of these
+automatically.
 
-An example of creating vacancy structures using unique Wycoff positions
-is shown below:
+Vacancies at the unique Wyckoff sites:
 
-``` python
+```python
 from jarvis.analysis.defects.vacancy import Vacancy
-#enforces cell-size to be close to 10 Angstroms
+
 vacs = Vacancy(atoms=Si).generate_defects(enforce_c_size=10.0)
 len(vacs), vacs[0].to_dict()["defect_structure"].num_atoms
-# We find that there are only one unique point vacanc available based on Wycoff-position information
+# Si has only one symmetry-unique vacancy site.
 ```
 
-Similarly, an example of creating, free surfaces is shown below:
+Free surfaces:
 
-``` python
-from jarvis.analysis.defects.surface import wulff_normals, Surface
+```python
+from jarvis.analysis.defects.surface import Surface
 
-# Let's create (1,1,1) surface with three layers, and vacuum=18.0 Angstrom
-# We center it around origin so that it looks good during visualization
 surface_111 = (
     Surface(atoms=Si, indices=[1, 1, 1], layers=3, vacuum=18)
-        .make_surface()
-        .center_around_origin()
+    .make_surface()
+    .center_around_origin()
 )
 print(surface_111)
 ```
 
-While the above example makes only one surface (111), we can ask
-jarvis-tools to provide all symmetrically distinct surfaces as follows:
+All symmetry-distinct surfaces up to a given Miller index:
 
-``` python
+```python
 from jarvis.analysis.structure.spacegroup import (
     Spacegroup3D,
     symmetrically_distinct_miller_indices,
 )
+
 spg = Spacegroup3D(atoms=Si)
 cvn = spg.conventional_standard_structure
 mills = symmetrically_distinct_miller_indices(max_index=3, cvn_atoms=cvn)
-for i in mills:
-    surf = Surface(atoms=Si, indices=i, layers=3, vacuum=18).make_surface()
-    print ('Index:', i)
-    print (surf)
+for hkl in mills:
+    surf = Surface(atoms=Si, indices=hkl, layers=3, vacuum=18).make_surface()
+    print("Index:", hkl)
+    print(surf)
 ```
 
-Heterostructures of a film and a substrate can be created using ZSL
-algorithm as shown in the following example:
+Film/substrate heterostructures via the Zur–McGill (ZSL) algorithm:
 
-``` python
-from jarvis.analysis.interface.zur import ZSLGenerator, mismatch_strts, get_hetero, make_interface
-film = Surface(atoms=Si, indices=[1, 1, 1], layers = 3, vacuum = 18 ).make_surface().center_around_origin() 
-substrate = Surface(atoms=Si, indices=[1, 1, 1], layers = 3, vacuum = 18 ).make_surface().center_around_origin()  
-info = make_interface(film=film, subs=substrate)['interface'].center(vacuum=18)
-print (info)
+```python
+from jarvis.analysis.interface.zur import make_interface
+from jarvis.analysis.defects.surface import Surface
+
+film      = Surface(atoms=Si, indices=[1, 1, 1], layers=3, vacuum=18).make_surface().center_around_origin()
+substrate = Surface(atoms=Si, indices=[1, 1, 1], layers=3, vacuum=18).make_surface().center_around_origin()
+
+interface = make_interface(film=film, subs=substrate)["interface"].center(vacuum=18)
+print(interface)
 ```
 
-## How to setup/analyze DFT calculations using VASP
+## DFT calculations with VASP
 
-The Vienna Ab initio Simulation Package (VASP) is a package for
-performing ab initio quantum mechanical calculations using either
-Vanderbilt pseudopotentials, or the projector augmented wave method, and
-a plane wave basis set. Manual for VASP is available at:
-<https://www.vasp.at/wiki/index.php/The_VASP_Manual> .
+The Vienna Ab initio Simulation Package (VASP) performs ab initio
+quantum-mechanical calculations using either Vanderbilt pseudopotentials
+or the projector augmented-wave method, with a plane-wave basis set.
+See the [VASP manual](https://www.vasp.at/wiki/index.php/The_VASP_Manual)
+for theory and runtime details.
 
-Running a VASP calculation requires the following files: `INCAR`,
-`POSCAR`, `KPOINTS`, `POTCAR` as well as additional files such as
-`vdw_kernel.bindat` for specific types of calculations. While setting up
-calculations for one or a few systems/setups should be straight forward,
-setting up calculations for thousands of materials and most importantly
-making a database out of all those calculations require automated
-calculations script collections such as JARVIS-Tools.
+A VASP run requires `INCAR`, `POSCAR`, `KPOINTS`, and `POTCAR` (plus
+`vdw_kernel.bindat` for some calculations). For one-off jobs this is
+straightforward; for thousands of materials with consistent
+post-processing, JARVIS-Tools provides:
 
-Gievn an atomic structure in 1) `jarvis.core.Atoms` format, JARVIS-Tools
-2) prepares input files such as `INCAR` etc. as mentioned above and 3)
-submits the calculations to your queuing system such as SLURM/PBS using
-`jarvis.tasks.vasp` and `jarvis.tasks.queue_jobs`. After a calculations
-get completed, 4) automated analysis can be carried out and plots and
-webpages are generated. The input file generation and output file
-parsing modules for VASP can be found in `jarvis.io.vasp.inputs` and
-`jarvis.io.vasp.outputs` modules. The automated analyis and XML
-generation for webpages can be found in `jarvis.db.vasp_to_xml` module.
-After the xml page creation they are converted using html using XSLT
-scripts.
+1. an `Atoms` representation in `jarvis.core.atoms`,
+2. input-file generation in `jarvis.io.vasp.inputs`,
+3. queue submission via `jarvis.tasks.vasp` and `jarvis.tasks.queue_jobs`,
+4. output parsing in `jarvis.io.vasp.outputs`, and
+5. XML/HTML generation in `jarvis.db.vasp_to_xml` (via XSLT for the
+   web rendering).
 
-Additionally, a JSON file is created with metadata from all the XML
-pages for thousands of materials to easily use in data-analytics/machine
-learning applications.The JARVIS-DFT
-(<https://jarvis.nist.gov/jarvisdft/>) database primarily uses such a
-workflow. Make sure `VASP_PSP_DIR` is declared as a PATH to VASP
-pseudopotential directory i.e.
+A consolidated JSON file is then built from the per-material XML pages
+for downstream data analytics and ML. The
+[JARVIS-DFT database](https://jarvis.nist.gov/jarvisdft/) is produced
+with this workflow.
 
-``` bash
-$ export VASP_PSP_DIR=YOUR_PATH_TO_PSUEDOPTENTIALS
+Make sure `VASP_PSP_DIR` points at your pseudopotential directory,
+typically in your `~/.bashrc`:
+
+```bash
+export VASP_PSP_DIR=/path/to/vasp_pseudopotentials
 ```
 
-in your ~/.bashrc file.
+### A single calculation
 
-### How to setup a single calculation
-
-We start by setting up and submitting a single VaspJob:
-
-``` python
+```python
+import os
 from jarvis.tasks.vasp.vasp import VaspJob, write_vaspjob
 from jarvis.io.vasp.inputs import Potcar, Incar, Poscar
-from jarvis.db.jsonutils import dumpjson
-from jarvis.core.atoms import Atoms
 from jarvis.core.kpoints import Kpoints3D
-from jarvis.tasks.queue_jobs import Queue
-import os
+from jarvis.db.jsonutils import dumpjson
 
-# Load/build crystal structure
-mat = Poscar.from_file('POSCAR')
-# coords = [[0, 0, 0], [0.25, 0.25, 0.25]]
-# elements = ["Si", "Si"]
-# box = [[2.715, 2.715, 0], [0, 2.715, 2.715], [2.715, 0, 2.715]]
-# atoms = Atoms(lattice_mat=box, coords=coords, elements=elements)
-# mat = Poscar(atoms)
-# mat.comment = "Silicon"
+mat = Poscar.from_file("POSCAR")
 
-# Build INCAR file
-data = dict(
+incar = Incar(dict(
     PREC="Accurate",
     ISMEAR=0,
     SIGMA=0.01,
@@ -316,103 +265,72 @@ data = dict(
     LVTOT=".FALSE.",
     LVHAR=".FALSE.",
     LWAVE=".FALSE.",
-)
-inc = Incar(data)
-# Build POTCAR info
-# export VASP_PSP_DIR = 'PATH_TO_YOUR_PSP'
-pot = Potcar.from_atoms(mat.atoms)
-#pot = Potcar(elements=mat.atoms.elements)
+))
 
-# Build Kpoints info
-kp = Kpoints3D().automatic_length_mesh(
+potcar = Potcar.from_atoms(mat.atoms)
+kpoints = Kpoints3D().automatic_length_mesh(
     lattice_mat=mat.atoms.lattice_mat, length=20
 )
 
-vasp_cmd = "PATH_TO vasp_std"
-copy_files = ["PATH_TO vdw_kernel.bindat"]
-jobname = "MAIN-RELAX@JVASP-1002"
 job = VaspJob(
     poscar=mat,
-    incar=inc,
-    potcar=pot,
-    kpoints=kp,
-    vasp_cmd=vasp_cmd,
-    copy_files=copy_files,
-    jobname=jobname,
+    incar=incar,
+    potcar=potcar,
+    kpoints=kpoints,
+    vasp_cmd="/path/to/vasp_std",
+    copy_files=["/path/to/vdw_kernel.bindat"],
+    jobname="MAIN-RELAX@JVASP-1002",
 )
 
 dumpjson(data=job.to_dict(), filename="job.json")
 write_vaspjob(pyname="job.py", job_json="job.json")
 ```
 
-The job.py can now be run on a cluster or on a PC as a python script.
-For running this job on a PBS cluster,
+`job.py` can now be run directly on a workstation, or submitted to a
+PBS/SLURM cluster:
 
-``` python
-submit_cmd = ["qsub", "submit_job"]
-# Example job commands, need to change based on your cluster
-job_line = (
-    "source activate my_jarvis \n"
-    + "python job.py"
-)
-name = "TestJob"
-directory = os.getcwd()
+```python
+import os
+from jarvis.tasks.queue_jobs import Queue
+
+job_line = "source activate my_jarvis\npython job.py"
 Queue.pbs(
     job_line=job_line,
-    jobname=name,
-    directory=directory,
-    submit_cmd=submit_cmd,
-    )
+    jobname="TestJob",
+    directory=os.getcwd(),
+    submit_cmd=["qsub", "submit_job"],
+)
 ```
 
-### How to setup high-throughput calculations
+### High-throughput calculations
 
-Currently, JARVIS-Tools can be used to submit job with SLURM and PBS
-clusters only. For high-throughput automated submissions one can use
-pre-build `JobFactory` module that allows automatic calculations for a
-series of properties.
+`JobFactory` chains together a sequence of standard property
+calculations (relaxation, band structure, optics, elastic constants,
+…) for many structures.
 
-``` python
-# List of materials to run high-throughput calculations on
-ids = ['POSCAR-1.vasp','POSCAR-2.vasp','POSCAR-3.vasp']
-
-from jarvis.tasks.vasp.vasp import (
-    JobFactory,
-    VaspJob,
-    GenericIncars,
-    write_jobfact,
-)
-from jarvis.io.vasp.inputs import Potcar, Incar, Poscar
-from jarvis.db.jsonutils import dumpjson
-from jarvis.db.figshare import data
-from jarvis.core.atoms import Atoms
-from jarvis.tasks.queue_jobs import Queue
+```python
 import os
-vasp_cmd = "mpirun PATH_TO vasp_std"
-copy_files = ["PATH_TO vdw_kernel.bindat"]
-submit_cmd = ["qsub", "submit_job"]
+from jarvis.tasks.vasp.vasp import JobFactory, GenericIncars, write_jobfact
+from jarvis.io.vasp.inputs import Poscar
+from jarvis.db.jsonutils import dumpjson
+from jarvis.tasks.queue_jobs import Queue
 
-# For slurm
-# submit_cmd = ["sbatch", "submit_job"]
+structures = ["POSCAR-1.vasp", "POSCAR-2.vasp", "POSCAR-3.vasp"]
 
-steps = [
-    "ENCUT",
-    "KPLEN",
-    "RELAX",
-    "BANDSTRUCT",
-    "OPTICS",
-    "MBJOPTICS",
-    "ELASTIC",
-]
-incs = GenericIncars().optb88vdw().incar.to_dict()
+vasp_cmd   = "mpirun /path/to/vasp_std"
+copy_files = ["/path/to/vdw_kernel.bindat"]
+submit_cmd = ["qsub", "submit_job"]   # use ["sbatch", "submit_job"] for SLURM
 
-for id in ids:
-    mat = Poscar.from_file(id)
-    cwd_home = os.getcwd()
-    dir_name = id.split('.vasp')[0] + "_" + str("PBEBO")
-    if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
+steps = ["ENCUT", "KPLEN", "RELAX", "BANDSTRUCT", "OPTICS", "MBJOPTICS", "ELASTIC"]
+incs  = GenericIncars().optb88vdw().incar.to_dict()
+
+home = os.getcwd()
+for poscar_file in structures:
+    mat = Poscar.from_file(poscar_file)
+    dir_name = poscar_file.split(".vasp")[0] + "_PBEBO"
+    os.makedirs(dir_name, exist_ok=True)
     os.chdir(dir_name)
+
     job = JobFactory(
         vasp_cmd=vasp_cmd,
         poscar=mat,
@@ -420,7 +338,6 @@ for id in ids:
         copy_files=copy_files,
         use_incar_dict=incs,
     )
-
     dumpjson(data=job.to_dict(), filename="job_fact.json")
     write_jobfact(
         pyname="job_fact.py",
@@ -428,399 +345,321 @@ for id in ids:
         input_arg="v.step_flow()",
     )
 
-    # Example job commands, need to change based on your cluster
-    job_line = (
-        "source activate my_jarvis \n"
-        + "python job_fact.py"
-    )
-    name = id
-    directory = os.getcwd()
+    job_line = "source activate my_jarvis\npython job_fact.py"
     Queue.pbs(
         job_line=job_line,
-        jobname=name,
-        #partition="",
+        jobname=poscar_file,
         walltime="24:00:00",
-        #account="",
         cores=12,
-        directory=directory,
+        directory=os.getcwd(),
         submit_cmd=submit_cmd,
     )
-    os.chdir(cwd_home)
-    """
-    # For Slurm clusters
-    Queue.slurm(
-        job_line=job_line,
-        jobname=name,
-        directory=directory,
-        submit_cmd=submit_cmd,
-    )
-    os.chdir(cwd_home)
-    """
+    # SLURM equivalent:
+    # Queue.slurm(job_line=job_line, jobname=poscar_file,
+    #             directory=os.getcwd(), submit_cmd=["sbatch", "submit_job"])
+
+    os.chdir(home)
 ```
 
-We provide modules to convert the calculation informato to `XML` which
-can be converted to `HTML` using `XSLT`. An example is give below:
+Convert a finished calculation tree to JARVIS-API XML (and from there
+to HTML via XSLT):
 
-``` python
+```python
 from jarvis.db.vasp_to_xml import VaspToApiXmlSchema
-from jarvis.db.restapi import Api
-folder="jarvis/jarvis/examples/vasp/SiOptB88vdW"
-filename = "JVASP-1002.xml"
-VaspToApiXmlSchema(folder=folder).write_xml(filename=filename)
+
+VaspToApiXmlSchema(folder="jarvis/jarvis/examples/vasp/SiOptB88vdW").write_xml(
+    filename="JVASP-1002.xml",
+)
 ```
 
-### How to plot electronic bandstructure and DOS
+### Band structure and DOS
 
-If you use the workflow used above, the density of states plot can be
-obtained using thr `vasprun.xml` file in MAIN-RELAX folder while the
-band-structure plot is obtained using `vasprun.xml` in MAIN-BAND folder.
+After the workflow above, the band structure and DOS come from the
+`vasprun.xml` files in the `MAIN-BAND` and `MAIN-RELAX` folders
+respectively.
 
-``` python
-from jarvis.io.vasp.outputs import Vasprun
-vrun = Vasprun('vasprun.xml')
-%matplotlib inline
+```python
 import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 22})
+from jarvis.io.vasp.outputs import Vasprun
 
-# Bandstructure plot
-vrun.get_bandstructure(kpoints_file_path='KPOINTS')
+vrun = Vasprun("vasprun.xml")
+plt.rcParams.update({"font.size": 22})
 
-# DOS plot
-energies, spin_up, spin_dn=vrun.total_dos
-plt.rcParams.update({'font.size': 22})
-plt.plot(energies,spin_up,label='Spin-up')
-plt.plot(energies,spin_dn,label='Spin-down')
-plt.xlabel('Energy(E-Ef)')
-plt.ylabel('DOS(arb.unit)')
-plt.xlim(-4,4)
+# Band structure
+vrun.get_bandstructure(kpoints_file_path="KPOINTS")
+
+# DOS
+energies, spin_up, spin_dn = vrun.total_dos
+plt.plot(energies, spin_up, label="Spin up")
+plt.plot(energies, spin_dn, label="Spin down")
+plt.xlabel(r"$E - E_\mathrm{F}$ (eV)")
+plt.ylabel("DOS (arb. units)")
+plt.xlim(-4, 4)
 plt.legend()
 ```
 
-### How to obtain elastic constants
+### Other VASP analyses
 
-### How to plot generate an STM/STEM image
+The following workflows are available but not yet documented in this
+guide. Consult the corresponding modules under `jarvis.analysis` and
+`jarvis.io.vasp.outputs` for usage:
 
-### How to plot generate a dielectric function spectra and solar eff.
+- elastic constants
+- STM / STEM image generation
+- dielectric function and solar-cell efficiency
+- electronic Wannier tight-binding models
+- Fermi surfaces
+- BoltzTraP transport properties
+- heterostructures and interfaces
+- IR / Raman spectra
+- piezoelectric, dielectric, Born effective charge constants
+- electric-field gradients
+- surface work functions
+- 2D-material exfoliation energies
 
-### How to generate/use electronic Wannier tight binding model
+## Classical MD with LAMMPS
 
-### How to generate Fermi-surfaces
+JARVIS-Tools wraps LAMMPS through `LammpsJob`, which takes an `Atoms`
+object, a pair-style and coefficient, and a control file
+(`*.mod` template).
 
-### How to run BoltzTrap for transport properties
+### Run a calculation
 
-### How to make heterostructures/interfaces
-
-### How to get IR/Raman spectra
-
-### How to get piezoelectic/dielecrric/BEC constants
-
-### How to get electric field gradients
-
-### How to get work-function of a surface
-
-### How to get exfoliation energy of a 2D material
-
-## How to run/analyze MD static/dynamic calculation using LAMMPS
-
-Molecular dynamics/classical force-field calculations can be carried out
-with LAMMPS software as in JARVIS-FF. An example for running LAMMPS is
-given below. Here, a `LammpsJob` module is defined with the help of
-atoms, pair-style, coefficient, and template file (\*.mod file) to
-control the calculations.
-
-### How to run calculation
-
-``` python
+```python
 from jarvis.tasks.lammps.lammps import LammpsJob, JobFactory
 from jarvis.core.atoms import Atoms
 from jarvis.db.figshare import get_jid_data
 from jarvis.analysis.structure.spacegroup import Spacegroup3D
 
+# Pull aluminum FCC from JARVIS-DFT
+atoms = Atoms.from_dict(get_jid_data(jid="JVASP-816", dataset="dft_3d")["atoms"])
+cvn_atoms = Spacegroup3D(atoms).conventional_standard_structure
 
-# atoms = Atoms.from_poscar('POSCAR')
-# Get Aluminum FCC from JARVIS-DFT database
-tmp_dict = get_jid_data(jid="JVASP-816", dataset="dft_3d")["atoms"]
-atoms = Atoms.from_dict(tmp_dict)
-
-# Get conventional cell
-spg = Spacegroup3D(atoms)
-cvn_atoms = spg.conventional_standard_structure
-
-# Set-up path to force-field/potential file, .mod file. and lammps executable
-ff = "/users/knc6/Software/LAMMPS/lammps-master/potentials/Al_zhou.eam.alloy"
+ff  = "/users/knc6/Software/LAMMPS/lammps-master/potentials/Al_zhou.eam.alloy"
 mod = "/users/knc6/Software/Devs/jarvis/jarvis/tasks/lammps/templates/inelast.mod"
 cmd = "/users/knc6/Software/LAMMPS/lammps-master/src/lmp_serial<in.main>out"
+
 parameters = {
-    "pair_style": "eam/alloy",
-    "pair_coeff": ff,
-    "atom_style": "charge",
+    "pair_style":   "eam/alloy",
+    "pair_coeff":   ff,
+    "atom_style":   "charge",
     "control_file": mod,
 }
 
-
-# Test LammpsJob
-lmp = LammpsJob(
-    atoms=cvn_atoms, parameters=parameters, lammps_cmd=cmd, jobname="Test"
+LammpsJob(
+    atoms=cvn_atoms, parameters=parameters, lammps_cmd=cmd, jobname="Test",
 ).runjob()
 
-# Test in a high-throughput
+# High-throughput equivalent
 job_fact = JobFactory(pair_style="eam/alloy", name="my_first_lammps_run")
 job_fact.all_props_eam_alloy(atoms=cvn_atoms, ff_path=ff, lammps_cmd=cmd)
 ```
 
-### How to analyze data
+### Parse and export
 
-An example to parse LAMMPS calculation folder using the above workflow
-is shown below:
-
-``` python
+```python
 from jarvis.io.lammps.outputs import parse_material_calculation_folder
-folder = '/home/users/knc6/Software/jarvis/jarvis/examples/lammps/Aleam'
-data = parse_material_calculation_folder(folder)
-print (data)
-```
-
-The calculation data can now be converted into XML files as follows. The
-XML with the help of XSLT is converted into an HTML page.
-
-``` python
 from jarvis.db.lammps_to_xml import write_xml
-write_xml(data=data,filename='JLMP-123.xml')
+
+data = parse_material_calculation_folder(
+    "/home/users/knc6/Software/jarvis/jarvis/examples/lammps/Aleam"
+)
+write_xml(data=data, filename="JLMP-123.xml")
 ```
 
-## How to run/analyze DFT static calculation using Quantum espresso
+The XML is converted to HTML via XSLT for web display.
 
-Quantum ESPRESSO is a suite for first-principles electronic-structure
-calculations and materials modeling, distributed for free and as free
-software under the GNU General Public License. It is based on
-density-functional theory, plane wave basis sets, and pseudopotentials.
+## DFT calculations with Quantum ESPRESSO
 
-### How to setup a single calculation
+Quantum ESPRESSO is a free, GPL-licensed suite for first-principles
+electronic-structure calculations using DFT, plane-wave basis sets, and
+pseudopotentials.
 
-An example for running QE simulation is shown below:
+### A single calculation
 
-``` python
-from jarvis.core.kpoints import Kpoints3D
+```python
 from jarvis.core.atoms import Atoms
+from jarvis.core.kpoints import Kpoints3D
+from jarvis.io.qe.inputs import QEinfile
+
 box = [[2.715, 2.715, 0], [0, 2.715, 2.715], [2.715, 0, 2.715]]
 coords = [[0, 0, 0], [0.25, 0.25, 0.25]]
 elements = ["Si", "Si"]
 Si = Atoms(lattice_mat=box, coords=coords, elements=elements)
-print(Si)
-kp = Kpoints3D().automatic_length_mesh(
-    lattice_mat=Si.lattice_mat, length=20
-)
+
+# SCF input
+kp = Kpoints3D().automatic_length_mesh(lattice_mat=Si.lattice_mat, length=20)
 qe = QEinfile(Si, kp)
-qe.write_file()
-kp = Kpoints3D().kpath(atoms=Si)
-qe = QEinfile(Si, kp)
-qe.write_file("qe.in2")
-sp = qe.atomic_species_string()
-sp = qe.atomic_cell_params()
-print("sp", sp)
-print(qe.input_params['system_params']['nat'])
+qe.write_file()                  # default filename
+
+# Band-structure input on a high-symmetry k-path
+kp_path = Kpoints3D().kpath(atoms=Si)
+QEinfile(Si, kp_path).write_file("qe.in2")
+
+print(qe.atomic_species_string())
+print(qe.atomic_cell_params())
+print("nat =", qe.input_params["system_params"]["nat"])
+```
+
+Then run from the shell:
+
+```bash
 $PATH_TO_PWSCF/pw.x -i qe.in
 ```
 
-### How to setup high-throughput calculations
+## ML models with JARVIS-CFID (sklearn / LightGBM)
 
-## How to traing JARVIS-CFID ML models using sklearn/lightgbm
+JARVIS-Tools supports two main routes to atomistic ML models:
 
-There are several methods to train atomistic property ML models such as
-based on hand-crafted descritprs and graph neural network. Examples of
-such methods are: JARVIS-CFID (Classical Force-Field Inspired
-Descriptors) for descriptors based training and JARVIS-ALIGNN (Atomistic
-Line Graph Neural Network) based on GNNs. In this section we discuss the
-JARVIS-CFID ( `jarvis.ai.descriptors.cfid`), which can be used for
-training models with only chemical formula or chemical formula+structure
-information.
+- **JARVIS-CFID** (Classical Force-field Inspired Descriptors) —
+  hand-crafted descriptors usable with classical ML libraries. See
+  `jarvis.ai.descriptors.cfid`.
+- **JARVIS-ALIGNN** (Atomistic Line Graph Neural Network) — graph
+  neural networks for property prediction, distributed as a
+  separate `alignn` package.
 
-### How to train chemical formula only datasets
+This section covers CFID for both formula-only and formula+structure
+inputs.
 
-For each chemical formula, we can obtain <span class="title-ref">438
-descriptors</span> consisting of features such as avergae
-electronegativity, average boiling points of elements etc. An example of
-getting descriptors isshown below:
+### Chemical-formula-only models
 
-``` python
+For each chemical formula, CFID produces 438 descriptors (average
+electronegativity, average boiling point, etc.). A toy training set:
+
+```python
 import numpy as np
-from jarvis.core.composition import Composition
-from jarvis.core.specie import Specie
-from jarvis.ai.pkgs.lgbm.regression import regression
 from jarvis.ai.descriptors.cfid import get_chem_only_descriptors
+from jarvis.ai.pkgs.lgbm.regression import regression
 
-# Load a dataset, you can use pandas read_csv also to generte my_data
-# Here is a sample dataset
 my_data = [
-    ["CoAl", 1],
-    ["CoNi", 2],
-    ["CoNb2Ni5", 3],
-    ["Co1.2Al2.3NiRe2", 4],
-    ["Co", 5],
-    ["CoAlTi", 1],
-    ["CoNiTi", 2],
-    ["CoNb2Ni5Ti", 3],
-    ["Co1.2Al2.3NiRe2Ti", 4],
-    ["CoTi", 5],
-    ["CoAlFe", 1],
-    ["CoNiFe", 2],
-    ["CoNb2Ni5Fe", 3],
-    ["Co1.2Al2.3NiRe2Fe", 4],
-    ["CoFe", 5],
+    ["CoAl",                1], ["CoNi",              2], ["CoNb2Ni5",       3],
+    ["Co1.2Al2.3NiRe2",     4], ["Co",                5], ["CoAlTi",         1],
+    ["CoNiTi",              2], ["CoNb2Ni5Ti",        3], ["Co1.2Al2.3NiRe2Ti", 4],
+    ["CoTi",                5], ["CoAlFe",            1], ["CoNiFe",         2],
+    ["CoNb2Ni5Fe",          3], ["Co1.2Al2.3NiRe2Fe", 4], ["CoFe",           5],
 ]
 
+X, Y, IDs = [], [], []
+for i, (formula, target) in enumerate(my_data):
+    X.append(get_chem_only_descriptors(formula))
+    Y.append(target)
+    IDs.append(i)
 
-# Convert my_data to numpy array
-X = []
-Y = []
-IDs = []
-for ii, i in enumerate(my_data):
-    X.append(get_chem_only_descriptors(i[0]))
-    Y.append(i[1])
-    IDs.append(ii)
-
-X = np.array(X)
-Y = np.array(Y).reshape(-1, 1)
+X   = np.array(X)
+Y   = np.array(Y).reshape(-1, 1)
 IDs = np.array(IDs)
 ```
 
-Now, we can use different ML algorithms on the descriptors and dataset
-such as linear regression, random forest, gradient boosting etc.
+Now train a LightGBM regressor through the JARVIS-Tools wrapper, which
+also handles feature pre-processing:
 
-An example, for using LightGBM with jarvis-tools wrapper code is shown
-below:
-
-``` python
-# Train a LightGBM regression model
+```python
 config = {"n_estimators": 5, "learning_rate": 0.01, "num_leaves": 2}
-# The regression module does feature pre-processing as well
-# Change config settings to improve model such as by hyper-parameter tuning
 info = regression(X=X, Y=Y, jid=IDs, feature_importance=False, config=config)
 
-
-# Print performance metrices
-# Print performance metrices
 print(
-    'r2=',info["reg_scores"]["r2"],
-    'MAE=',info["reg_scores"]["mae"],
-    'RMSE=',info["reg_scores"]["rmse"],
+    "r2  =", info["reg_scores"]["r2"],
+    "MAE =", info["reg_scores"]["mae"],
+    "RMSE=", info["reg_scores"]["rmse"],
 )
 ```
 
-### How to train regression model
+### Formula + structure regression
 
-Suppose we have 60000 materials, and we get 1557 descriptor for each
-material (438 chemical as above as well as structure and charge
-descriptors), we will have a 60000x1557 matrix. Let's call this matrix
-as 'x' or input matrix. Next, we can get target ('y') data either from
-DFT, FF calculations or experiments. For example, we can choose
-formation energies of 60000 materials in the JARVIS-DFT as the dtarget
-data giving 60000x1 matrix.
+For 60,000 materials, CFID produces a 1,557-dimensional descriptor per
+material (438 chemical + structural and charge descriptors), giving a
+60,000 × 1,557 input matrix. Pair this with a target — for example
+formation energies from JARVIS-DFT — and train any regressor.
 
-Now, we can use a ML/AI algorithm to establish statistical relation
-between the x and y data. Once trained we get a trained model, which can
-be stored in say pickle or joblib format.
+We find that gradient-boosted decision trees (LightGBM in particular)
+work especially well with CFID. JARVIS-Tools ships wrappers for
+scikit-learn, TensorFlow, PyTorch, and LightGBM.
 
-For a new material now, it can be converted into CFID i.e. 1x1557 matrix
-which when fed to the model will give 1x1 prediction hence the ML
-prediction. We can use a range of ML algorithms such as linear
-regression, decision trees, Gaussian processes etc. We find with CFID
-descriptors, gradient boosting decision trees (especially in LightGBM)
-gives one of the most accurate results. We provide tools to run with
-major ML packages such as scikit-learn, tensorflow, pytorch, lightgbm
-etc. Example-1:
-
-``` python
-# An example of JARVIS-ML training
-from jarvis.ai.pkgs.utils import get_ml_data
-from jarvis.ai.pkgs.utils import regr_scores
-X,y,jid=get_ml_data()
-#Formation energy for 3D materials, you can choose other properties/dataset as well
+```python
+from jarvis.ai.pkgs.utils import get_ml_data, regr_scores
 import lightgbm as lgb
 from sklearn.model_selection import train_test_split
-lgbm = lgb.LGBMRegressor(device= 'gpu',n_estimators= 1170,learning_rate= 0.15375236057119931,num_leaves= 273)       
-X_train, X_test, y_train, y_test, jid_train, jid_test = train_test_split(X, y, jid, random_state=1, test_size=.1)
-lgbm.fit(X_train,y_train)
-pred = lgbm.predict(X_test)
-reg_sc = regr_scores(y_test, pred)
-print (reg_sc['mae'])
+
+# Default target: formation energy for 3D materials.
+X, y, jid = get_ml_data()
+
+X_train, X_test, y_train, y_test, _, _ = train_test_split(
+    X, y, jid, random_state=1, test_size=0.1,
+)
+
+lgbm = lgb.LGBMRegressor(
+    device="gpu",
+    n_estimators=1170,
+    learning_rate=0.15375236057119931,
+    num_leaves=273,
+)
+lgbm.fit(X_train, y_train)
+print("MAE =", regr_scores(y_test, lgbm.predict(X_test))["mae"])
 ```
 
-## How to traing JARVIS-ALIGNN ML models using PyTorch
+## ML models with JARVIS-ALIGNN (PyTorch)
 
-### How to train regression model
+ALIGNN training and inference live in the standalone
+[`alignn`](https://github.com/usnistgov/alignn) package; see its
+documentation for regression and classification workflows.
 
-How to train classification model ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+## Quantum computing with Qiskit / Tequila / PennyLane
 
-## How to use quantum computation algorithms using Qiskit/Tequila/Pennylane
+Quantum chemistry — and, in JARVIS, condensed-matter electronic-structure
+problems via Wannier tight-binding Hamiltonians (WTBH) — is one of the
+most promising applications of quantum computers. The Variational
+Quantum Eigensolver (VQE) is a standard hybrid quantum-classical
+algorithm for ground-state estimation: a parameterized quantum circuit
+("ansatz") prepares a trial state, the quantum device measures the
+expectation value of the Hamiltonian, and a classical optimizer updates
+the circuit parameters to minimize the energy.
 
-Quantum chemistry is one of the most attractive applications for quantum
-computations. Predicting the energy levels of a Hamiltonian is a key
-problem in quantum chemistry. Variational quantum eigen solver (VQE) is
-one of the most celebrated methods for predicting an approximate ground
-state of a Hamiltonian on a quantum computer following the variational
-principles of quantum mechanics.VQE utilizes Ritz variational principle
-where a quantum computer is used to prepare a wave function ansatz of
-the system and estimate the expectation value of its electronic
-Hamiltonian while a classical optimizer is used to adjust the quantum
-circuit parameters in order to find the ground state energy. A typical
-VQE task is carried out as follows: an ansatz/circuit model with tunable
-parameters is constructed and a quantum circuit capable of representing
-this ansatz is designed. In this section, we show a few examples to
-apply quantum algorithms for solids using Wannier-tight binding
-Hamiltonians (WTBH). WTBHs can be generated from several DFT codes.
-Here, we use JARVIS-WTBH database.
+This section runs VQE on a WTBH from the JARVIS-WTBH database. WTBHs can
+be generated by several DFT codes; here we use the JARVIS-WTBH dataset
+directly.
 
-### How to generate circuit model
+### Build a circuit and run VQE
 
-Developing a heuristic quantum circuit model is probably the most
-challenging part of applying quantum algorithms. Fortunately, there are
-few well-known generalized models that we can use or generate ourselves.
-There are several circuit models (for a fixed number of qubits and
-repeat units) available in `jarvis.core.circuits.`. In the following
-example, we use circuit6/EfficientSU2 model and use it to predict
-electronic energy levels (at a K-point in the Brillouin zone) of FCC
-Aluminum using a WTBH.
+A handful of standard ansatz templates live in `jarvis.core.circuits`.
+The example below uses circuit-6 (EfficientSU2) to predict electronic
+energy levels of FCC aluminum at the X-point in the Brillouin zone.
 
-``` python
-from jarvis.db.figshare import get_wann_electron, get_wann_phonon, get_hk_tb
+```python
+from qiskit import Aer
+from jarvis.db.figshare import get_wann_electron, get_hk_tb
 from jarvis.io.qiskit.inputs import HermitianSolver
 from jarvis.core.circuits import QuantumCircuitLibrary
-from qiskit import Aer
 
 backend = Aer.get_backend("statevector_simulator")
-# Aluminum JARVIS-ID: JVASP-816
-wtbh, Ef, atoms = get_wann_electron("JVASP-816") 
-kpt = [0.5, 0., 0.5] # X-point
-hk = get_hk_tb(w=wtbh, k=kpt)
-HS = HermitianSolver(hk)
-n_qubits = HS.n_qubits()
-circ = QuantumCircuitLibrary(n_qubits=n_qubits).circuit6()
-en, vqe_result, vqe = HS.run_vqe(var_form=circ, backend=backend)
-vals,vecs = HS.run_numpy()
-# Ef: Fermi-level
-print('Classical, VQE (eV):', vals[0]-Ef, en-Ef)
-print('Show model\n', circ)
+
+# Aluminum, JARVIS-ID JVASP-816
+wtbh, Ef, atoms = get_wann_electron("JVASP-816")
+hk = get_hk_tb(w=wtbh, k=[0.5, 0.0, 0.5])     # X-point
+
+solver = HermitianSolver(hk)
+circuit = QuantumCircuitLibrary(n_qubits=solver.n_qubits()).circuit6()
+
+en, vqe_result, vqe = solver.run_vqe(var_form=circuit, backend=backend)
+vals, vecs = solver.run_numpy()
+
+print("Classical, VQE (eV):", vals[0] - Ef, en - Ef)
+print("Circuit:")
+print(circuit)
 ```
 
-### How to run cals. on simulators
+### Run on a real quantum device
 
-In the above example, we run simulations on `statevector_simulator`.
-Qiskit provides several other simulators, which can also be used.
+Replace the simulator backend with an IBM Quantum device:
 
-### How to run cals. on actual quantum computers
+```python
+import qiskit
+from qiskit import IBMQ
 
-To run calculations on real quantum computers, we just replace the
-`backend` parameter above such as the following:
-
-``` python
-token='Get Token from your IBM account' 
+token = "<your IBM Quantum API token>"
 qiskit.IBMQ.save_account(token)
 provider = IBMQ.load_account()
-backend = provider.get_backend('ibmq_5_yorktown')
+backend  = provider.get_backend("ibmq_5_yorktown")
 ```
 
-Your job will put in a queue and as the simulation complete result will
-be sent back to you. Note that there might be a lot of jobs in the queue
-already, so it might take a while. You may run simulations using IBM GUI
-or use something like Jupyter notebook/Colab notebook.
+The job is queued; results are returned when execution finishes. Wait
+times depend on device load.

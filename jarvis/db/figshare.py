@@ -95,6 +95,77 @@ def get_db_info():
             "Obtaining ALIGNN-FF training DB 300k ...",
             "https://doi.org/10.1039/D2DD00096B",
         ],
+        # ALIGNN2 datasets (Figshare project 279395)
+        # https://doi.org/10.6084/m9.figshare.33325302
+        "alignn_ff_db2": [
+            "https://ndownloader.figshare.com/files/67810098",
+            "fd_id_prop.json",
+            "Obtaining ALIGNN-FF finite-difference (FD) training DB 1.18M ...",
+            "https://doi.org/10.6084/m9.figshare.33325302",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325272
+        "dfpt_tensors": [
+            "https://ndownloader.figshare.com/files/67810035",
+            "dfpt.json",
+            "Obtaining JARVIS-DFT DFPT tensors (Born charges, dielectric, piezo) ...",
+            "https://doi.org/10.6084/m9.figshare.33325272",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325275
+        "a2f": [
+            "https://ndownloader.figshare.com/files/67810083",
+            "a2f_id_prop.json",
+            "Obtaining Eliashberg alpha^2F(omega) spectral-function dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325275",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325278
+        "elastic_tensor": [
+            "https://ndownloader.figshare.com/files/67810041",
+            "id_prop_elastic.json",
+            "Obtaining JARVIS-DFT elastic stiffness tensor (Cij, 6x6) ...",
+            "https://doi.org/10.6084/m9.figshare.33325278",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325281
+        "multitask_eps": [
+            "https://ndownloader.figshare.com/files/67810086",
+            "eps_id_prop.json",
+            "Obtaining JARVIS-DFT multitask dielectric (eps) dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325281",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325284
+        "chg_mag": [
+            "https://ndownloader.figshare.com/files/67810089",
+            "chg_mag_id_prop.json",
+            "Obtaining JARVIS-DFT per-atom charge (Bader) + magnetic-moment ...",
+            "https://doi.org/10.6084/m9.figshare.33325284",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325287
+        "ir_alignn": [
+            "https://ndownloader.figshare.com/files/67810092",
+            "ir_id_prop.json",
+            "Obtaining JARVIS-DFT DFPT infrared (IR) spectra dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325287",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325290
+        "raman_alignn": [
+            "https://ndownloader.figshare.com/files/67810095",
+            "raman_id_prop.json",
+            "Obtaining JARVIS Raman spectra dataset (ALIGNN2 form) ...",
+            "https://doi.org/10.6084/m9.figshare.33325290",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325293
+        "edos_alignn": [
+            "https://ndownloader.figshare.com/files/67810056",
+            "edos.json",
+            "Obtaining JARVIS-DFT electronic DOS (300-bin) dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325293",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325299
+        "pdos_alignn": [
+            "https://ndownloader.figshare.com/files/67810062",
+            "pdos.json",
+            "Obtaining JARVIS-DFT phonon DOS (200-bin) dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325299",
+        ],
         "mp_3d_2020": [
             "https://ndownloader.figshare.com/files/26791259",
             "all_mp.json",
@@ -107,6 +178,12 @@ def get_db_info():
             "megnet.json",
             "Obtaining MEGNET-3D CFID dataset 69k...",
             "https://pubs.acs.org/doi/10.1021/acs.chemmater.9b01294",
+        ],
+        "matpes": [
+            "https://ndownloader.figshare.com/files/66983876",
+            "matpes.json",
+            "Obtaining MATPES-PBE dataset 434k...",
+            "https://matpes.ai",
         ],
         # https://doi.org/10.6084/m9.figshare.14745435
         "megnet2": [

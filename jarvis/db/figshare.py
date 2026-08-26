@@ -166,6 +166,13 @@ def get_db_info():
             "Obtaining JARVIS-DFT phonon DOS (200-bin) dataset ...",
             "https://doi.org/10.6084/m9.figshare.33325299",
         ],
+        # https://doi.org/10.6084/m9.figshare.33336759
+        "ltc_alignn": [
+            "https://ndownloader.figshare.com/files/67841763",
+            "ltc_id_prop.json",
+            "Obtaining lattice thermal conductivity (log10 kappa_L) dataset on OQMD structures ...",
+            "https://doi.org/10.6084/m9.figshare.33336759",
+        ],
         "mp_3d_2020": [
             "https://ndownloader.figshare.com/files/26791259",
             "all_mp.json",

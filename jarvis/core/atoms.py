@@ -1361,17 +1361,19 @@ class Atoms(object):
     def phonopy_converter(self, pbc=True):
         """Get phonopy representation of the atoms object."""
         try:
-            from phonopy.structure.atoms import Atoms as PhonopyAtoms
-
-            return PhonopyAtoms(
-                symbols=self.elements,
-                positions=self.cart_coords,
-                pbc=pbc,
-                cell=self.lattice_mat,
-            )
+            from phonopy.structure.atoms import PhonopyAtoms
         except Exception:
             print("Requires phonopy for this functionality.")
-            pass
+            return
+        kw = dict(
+            symbols=self.elements,
+            positions=self.cart_coords,
+            cell=self.lattice_mat,
+        )
+        try:
+            return PhonopyAtoms(pbc=pbc, **kw)   # phonopy < 4
+        except TypeError:
+            return PhonopyAtoms(**kw)            # phonopy >= 4 dropped pbc=
 
     def ase_converter(self, pbc=True):
         """Get ASE representation of the atoms object."""

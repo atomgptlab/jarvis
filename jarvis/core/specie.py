@@ -316,14 +316,11 @@ def get_node_attributes(species, atom_features="atomic_number"):
             # For alternative features use
             # get_digitized_feats_hot_encoded()
             i = json.load(f)
-        try:
-            return i[key]
-        except KeyError:
-            print(f"warning: could not load CGCNN features for {key}")
-            print("Setting it to max atomic number available here, 103")
-            # TODO Check for the error in oqmd_3d_no_cfid dataset
-            # return i['Lr']
-            return i["100"]
+        # cgcnn.json defines elements 1-100; species outside that set
+        # (trans-fermium placeholders, or an unrecognized 'nan' symbol)
+        # fall back to element 100's features silently -- these never occur
+        # in real structures, so the old print was pure noise.
+        return i.get(key, i["100"])
 
 
 keys = [

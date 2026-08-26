@@ -40,9 +40,9 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.6815699
         "dft_3d": [
-            "https://ndownloader.figshare.com/files/38521619",
-            "jdft_3d-12-12-2022.json",
-            "Obtaining 3D dataset 76k ...",
+            "https://ndownloader.figshare.com/files/64391379",
+            "jdft_3d-9-24-2025.json",
+            "Obtaining 3D dataset 94k ...",
             "https://doi.org/10.1016/j.commatsci.2025.114063"
             # "https://www.nature.com/articles/s41524-020-00440-1"
             + "\nOther versions:https://doi.org/10.6084/m9.figshare.6815699",
@@ -53,6 +53,15 @@ def get_db_info():
             "d2-3-12-2021.json",
             "Obtaining 2D dataset 1.1k ...",
             "https://www.nature.com/articles/s41524-020-00440-1",
+        ],
+        # https://doi.org/10.6084/m9.figshare.6815699
+        "dft_3d_2022": [
+            "https://ndownloader.figshare.com/files/38521619",
+            "jdft_3d-12-12-2022.json",
+            "Obtaining 3D dataset 76k ...",
+            "https://doi.org/10.1016/j.commatsci.2025.114063"
+            # "https://www.nature.com/articles/s41524-020-00440-1"
+            + "\nOther versions:https://doi.org/10.6084/m9.figshare.6815699",
         ],
         # https://doi.org/10.6084/m9.figshare.6815699
         "dft_3d_2021": [
@@ -86,6 +95,84 @@ def get_db_info():
             "Obtaining ALIGNN-FF training DB 300k ...",
             "https://doi.org/10.1039/D2DD00096B",
         ],
+        # ALIGNN2 datasets (Figshare project 279395)
+        # https://doi.org/10.6084/m9.figshare.33325302
+        "alignn_ff_db2": [
+            "https://ndownloader.figshare.com/files/67810098",
+            "fd_id_prop.json",
+            "Obtaining ALIGNN-FF finite-difference (FD) training DB 1.18M ...",
+            "https://doi.org/10.6084/m9.figshare.33325302",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325272
+        "dfpt_tensors": [
+            "https://ndownloader.figshare.com/files/67810035",
+            "dfpt.json",
+            "Obtaining JARVIS-DFT DFPT tensors (Born charges, dielectric, piezo) ...",
+            "https://doi.org/10.6084/m9.figshare.33325272",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325275
+        "a2f": [
+            "https://ndownloader.figshare.com/files/67810083",
+            "a2f_id_prop.json",
+            "Obtaining Eliashberg alpha^2F(omega) spectral-function dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325275",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325278
+        "elastic_tensor": [
+            "https://ndownloader.figshare.com/files/67810041",
+            "id_prop_elastic.json",
+            "Obtaining JARVIS-DFT elastic stiffness tensor (Cij, 6x6) ...",
+            "https://doi.org/10.6084/m9.figshare.33325278",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325281
+        "multitask_eps": [
+            "https://ndownloader.figshare.com/files/67810086",
+            "eps_id_prop.json",
+            "Obtaining JARVIS-DFT multitask dielectric (eps) dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325281",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325284
+        "chg_mag": [
+            "https://ndownloader.figshare.com/files/67810089",
+            "chg_mag_id_prop.json",
+            "Obtaining JARVIS-DFT per-atom charge (Bader) + magnetic-moment ...",
+            "https://doi.org/10.6084/m9.figshare.33325284",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325287
+        "ir_alignn": [
+            "https://ndownloader.figshare.com/files/67810092",
+            "ir_id_prop.json",
+            "Obtaining JARVIS-DFT DFPT infrared (IR) spectra dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325287",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325290
+        "raman_alignn": [
+            "https://ndownloader.figshare.com/files/67810095",
+            "raman_id_prop.json",
+            "Obtaining JARVIS Raman spectra dataset (ALIGNN2 form) ...",
+            "https://doi.org/10.6084/m9.figshare.33325290",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325293
+        "edos_alignn": [
+            "https://ndownloader.figshare.com/files/67810056",
+            "edos.json",
+            "Obtaining JARVIS-DFT electronic DOS (300-bin) dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325293",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33325299
+        "pdos_alignn": [
+            "https://ndownloader.figshare.com/files/67810062",
+            "pdos.json",
+            "Obtaining JARVIS-DFT phonon DOS (200-bin) dataset ...",
+            "https://doi.org/10.6084/m9.figshare.33325299",
+        ],
+        # https://doi.org/10.6084/m9.figshare.33336759
+        "ltc_alignn": [
+            "https://ndownloader.figshare.com/files/67841763",
+            "ltc_id_prop.json",
+            "Obtaining lattice thermal conductivity (log10 kappa_L) dataset on OQMD structures ...",
+            "https://doi.org/10.6084/m9.figshare.33336759",
+        ],
         "mp_3d_2020": [
             "https://ndownloader.figshare.com/files/26791259",
             "all_mp.json",
@@ -98,6 +185,12 @@ def get_db_info():
             "megnet.json",
             "Obtaining MEGNET-3D CFID dataset 69k...",
             "https://pubs.acs.org/doi/10.1021/acs.chemmater.9b01294",
+        ],
+        "matpes": [
+            "https://ndownloader.figshare.com/files/66983876",
+            "matpes.json",
+            "Obtaining MATPES-PBE dataset 434k...",
+            "https://matpes.ai",
         ],
         # https://doi.org/10.6084/m9.figshare.14745435
         "megnet2": [
@@ -172,7 +265,7 @@ def get_db_info():
         ],
         # https://doi.org/10.6084/m9.figshare.14912820.v1
         "cod_200": [
-            "https://figshare.com/ndownloader/files/63463986",
+            "https://ndownloader.figshare.com/files/63463986",
             "cod_200.json",
             "Obtaining COD dataset 237k",
             "https://doi.org/10.1107/S1600576720016532",
